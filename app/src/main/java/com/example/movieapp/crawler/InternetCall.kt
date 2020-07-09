@@ -2,7 +2,7 @@ package com.example.movieapp.crawler
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.movieapp.crawler.pojo.AllData
+import com.example.movieapp.crawler.pojo.ResultPage
 import com.example.movieapp.crawler.pojo.Movie
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,7 +29,7 @@ enum class TypeList(val s: String) {
 private val TAG = "InternetCall"
 
 
-const val URL = "http://api.themoviedb.org/3/movie/"
+const val URL = "https://api.themoviedb.org/3/movie/"
 
 interface MoviesService {
 
@@ -37,7 +37,7 @@ interface MoviesService {
     fun listOfMovies(
         @Path("type") type: String,
         @Query("api_key") s: String = KEY_PRIVATE
-    ): Call<AllData>
+    ): Call<ResultPage>
 }
 
 fun internetCall(type: TypeList): MutableLiveData<List<Movie>> {
@@ -51,24 +51,24 @@ fun internetCall(type: TypeList): MutableLiveData<List<Movie>> {
     val service = retrofit.create(MoviesService::class.java)
 
     service.listOfMovies(type.s)
-        .enqueue(object : Callback<AllData> {
-            override fun onResponse(call: Call<AllData>, response: Response<AllData>) {
+        .enqueue(object : Callback<ResultPage> {
+            override fun onResponse(call: Call<ResultPage>, response: Response<ResultPage>) {
 
-                val allCourse = response.body()
+                val allData = response.body()
 
-                if (allCourse != null) {
+                if (allData != null) {
                     Log.i(TAG, "onResponse: all elements are in the phone ")
 
-                    for (c in allCourse.results)
-                        Log.d(TAG, "onResponse:  one course : ${c.original_title} ")
+                    for (c in allData.results)
+                        Log.d(TAG, "onResponse:   $c ")
 
-                    moviesRes.value = allCourse.results
+                    moviesRes.value = allData.results
                 }
 
 
             }
 
-            override fun onFailure(call: Call<AllData>, t: Throwable) {
+            override fun onFailure(call: Call<ResultPage>, t: Throwable) {
                 Log.e(TAG, "onFailure: ${t.message}")
 
             }
