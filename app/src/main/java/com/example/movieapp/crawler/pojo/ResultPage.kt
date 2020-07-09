@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * Created by Benjamin Vouillon on 08,July,2020
  */
-data class ServerRequestContent(
+data class ResultPage(
     @SerializedName("page") val page: Int,
     @SerializedName("total_results") val totalResults: Int,
     @SerializedName("total_pages") val totalPages: Int,

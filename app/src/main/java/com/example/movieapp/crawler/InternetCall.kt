@@ -2,7 +2,7 @@ package com.example.movieapp.crawler
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.movieapp.crawler.pojo.ServerRequestContent
+import com.example.movieapp.crawler.pojo.ResultPage
 import com.example.movieapp.crawler.pojo.Movie
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,7 +37,7 @@ interface MoviesService {
     fun listOfMovies(
         @Path("type") type: String,
         @Query("api_key") s: String = KEY_PRIVATE
-    ): Call<ServerRequestContent>
+    ): Call<ResultPage>
 }
 
 fun internetCall(type: TypeList): MutableLiveData<List<Movie>> {
@@ -51,8 +51,8 @@ fun internetCall(type: TypeList): MutableLiveData<List<Movie>> {
     val service = retrofit.create(MoviesService::class.java)
 
     service.listOfMovies(type.s)
-        .enqueue(object : Callback<ServerRequestContent> {
-            override fun onResponse(call: Call<ServerRequestContent>, response: Response<ServerRequestContent>) {
+        .enqueue(object : Callback<ResultPage> {
+            override fun onResponse(call: Call<ResultPage>, response: Response<ResultPage>) {
 
                 val allData = response.body()
 
@@ -68,7 +68,7 @@ fun internetCall(type: TypeList): MutableLiveData<List<Movie>> {
 
             }
 
-            override fun onFailure(call: Call<ServerRequestContent>, t: Throwable) {
+            override fun onFailure(call: Call<ResultPage>, t: Throwable) {
                 Log.e(TAG, "onFailure: ${t.message}")
 
             }
