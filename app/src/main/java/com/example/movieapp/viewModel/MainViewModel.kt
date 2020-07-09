@@ -1,9 +1,7 @@
 package com.example.movieapp.viewModel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
 import com.example.movieapp.crawler.TypeList
 import com.example.movieapp.crawler.internetCall
 import com.example.movieapp.crawler.pojo.Movie
@@ -12,7 +10,7 @@ import com.example.movieapp.crawler.pojo.Movie
  * Created by Benjamin Vouillon on 08,July,2020
  */
 
-enum class TypeDisplay(){
+enum class TypeDisplay() {
     POPULAR,
     RATED,
     LIKED
@@ -23,8 +21,8 @@ class MainViewModel : ViewModel() {
     /**
      * Our 3 lists of Movies
      */
-    var popular:MutableLiveData<List<Movie>> = internetCall(TypeList.POPULAR)
-    var rated:MutableLiveData<List<Movie>> = internetCall(TypeList.HIGHEST_RATE)
+    var popular: MutableLiveData<List<Movie>>? = null
+    var rated: MutableLiveData<List<Movie>>? = null
 
 
     /**
@@ -35,13 +33,19 @@ class MainViewModel : ViewModel() {
     /*
     return the list of elements necessary
      */
-    /*fun getListCurrent() : MutableLiveData<List<Movie>> = when(TypeDisplay){
-        com.example.movieapp.viewModel.TypeDisplay.POPULAR-> popular
-        com.example.movieapp.viewModel.TypeDisplay.RATED -> rated
-        com.example.movieapp.viewModel.TypeDisplay.LIKED -> TODO()
-    }*/
-
-
+    fun getListCurrent(): MutableLiveData<List<Movie>> {
+        return when (TypeDisplay) {
+            com.example.movieapp.viewModel.TypeDisplay.POPULAR -> {
+                if (popular== null ) popular = internetCall(TypeList.POPULAR)
+                popular
+            }
+            com.example.movieapp.viewModel.TypeDisplay.RATED -> {
+                if (rated== null ) rated = internetCall(TypeList.HIGHEST_RATE)
+                rated
+            }
+            com.example.movieapp.viewModel.TypeDisplay.LIKED -> TODO()
+        }!!
+    }
 
 
 }

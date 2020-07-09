@@ -16,6 +16,8 @@ class MainActivity : AppCompatActivity() {
         // Connect the ViewModel to the app
         viewModel= ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(MainViewModel::class.java)
 
+
+        viewModel.getListCurrent()
         //Picasso.get().load("https://image.tmdb.org/t/p/w185/nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg").into(imageView);
 
     }
