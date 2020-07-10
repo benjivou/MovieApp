@@ -110,3 +110,4 @@ app/src/main/java/com/example/movieapp/crawler/UntrackedKey.kt
 # Phrase
 
 .phrase.yml
+*.mp4
