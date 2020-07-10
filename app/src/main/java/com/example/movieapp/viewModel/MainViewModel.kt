@@ -28,24 +28,28 @@ class MainViewModel : ViewModel() {
     /**
      * Type of the list displayed
      */
-    var TypeDisplay: TypeDisplay = com.example.movieapp.viewModel.TypeDisplay.POPULAR
+    var typeDisplay: TypeDisplay = com.example.movieapp.viewModel.TypeDisplay.POPULAR
 
     /*
     return the list of elements necessary
      */
     fun getListCurrent(): MutableLiveData<List<Movie>> {
-        return when (TypeDisplay) {
+        return getList(typeDisplay)
+    }
+
+    fun getList(typeDisplay: TypeDisplay): MutableLiveData<List<Movie>> {
+        this.typeDisplay = typeDisplay
+        return when (typeDisplay) {
             com.example.movieapp.viewModel.TypeDisplay.POPULAR -> {
-                if (popular== null ) popular = internetCall(TypeList.POPULAR)
+                if (popular == null) popular = internetCall(TypeList.POPULAR)
                 popular
             }
             com.example.movieapp.viewModel.TypeDisplay.RATED -> {
-                if (rated== null ) rated = internetCall(TypeList.HIGHEST_RATE)
+                if (rated == null) rated = internetCall(TypeList.HIGHEST_RATE)
                 rated
             }
             com.example.movieapp.viewModel.TypeDisplay.LIKED -> TODO()
         }!!
     }
-
 
 }

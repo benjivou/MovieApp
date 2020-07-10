@@ -44,9 +44,9 @@ class MovieViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
 
     fun bind(movie: Movie) {
         mTitleView?.text = movie.title
-        mPopularity?.text = "popularity : " + movie.popularity.toString()
-        mRate?.text = "rate : " + movie.voteAverage.toString()
-        Picasso.get().load("https://image.tmdb.org/t/p/w185"+movie.posterPath).into(mImage);
+        mPopularity?.text = "popularity : ${ movie.popularity}"
+        mRate?.text = "rate  : ${ movie.voteAverage}"
+        Picasso.get().load("https://image.tmdb.org/t/p/w185${movie.posterPath}").into(mImage);
     }
 
 }
