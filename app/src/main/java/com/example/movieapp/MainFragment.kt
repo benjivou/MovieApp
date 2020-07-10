@@ -17,17 +17,6 @@ import kotlinx.android.synthetic.main.fragment_main.*
 class MainFragment : Fragment() {
     private val viewModel: MainViewModel by activityViewModels()
 
-   /* private val nicCageMovies = listOf(
-        Movie("Raising Arizona", 1987, "raising_arizona.jpg"),
-        Movie("Vampire's Kiss", 1988, "vampires_kiss.png"),
-        Movie("Con Airdbfffffffffffffffffffffffffffffffffffffffff", 1997, "con_air.jpg"),
-        Movie("Face/Off", 1997, "face_off.jpg"),
-        Movie("National Treasure", 2004, "national_treasure.jpg"),
-        Movie("The Wicker Man", 2006, "wicker_man.jpg"),
-        Movie("Bad Lieutenant", 2009, "bad_lieutenant.jpg"),
-        Movie("Kick-Ass", 2010, "kickass.jpg")
-    )*/
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -41,12 +30,12 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         list_recycler_view.apply {
             layoutManager = GridLayoutManager(activity,2)
-            viewModel.getListCurrent().observe(viewLifecycleOwner, Observer { adapter = ListAdapter(it) })
+viewModel.getListCurrent().observe(viewLifecycleOwner, Observer { adapter = ListAdapter(it) })
 
-        }
-    }
+}
+}
 
-    companion object {
-        fun newInstance(): MainFragment = MainFragment()
-    }
+companion object {
+    fun newInstance(): MainFragment = MainFragment()
+}
 }
