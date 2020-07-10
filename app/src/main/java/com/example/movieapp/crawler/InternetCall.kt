@@ -2,8 +2,8 @@ package com.example.movieapp.crawler
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.movieapp.crawler.pojo.ResultPage
 import com.example.movieapp.crawler.pojo.Movie
+import com.example.movieapp.crawler.pojo.ResultPage
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -64,8 +64,6 @@ fun internetCall(type: TypeList): MutableLiveData<List<Movie>> {
 
                     moviesRes.value = allData.results
                 }
-
-
             }
 
             override fun onFailure(call: Call<ResultPage>, t: Throwable) {

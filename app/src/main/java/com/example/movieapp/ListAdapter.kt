@@ -28,25 +28,27 @@ class ListAdapter(private val list: List<Movie>) : RecyclerView.Adapter<MovieVie
 
 class MovieViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     RecyclerView.ViewHolder(inflater.inflate(R.layout.list_item, parent, false)) {
+
     private val TAG = "ListAdapter"
 
-    private var mTitleView: TextView? = null
-    private var mPopularity: TextView? = null
-    private var mRate: TextView? = null
-    private var mImage: ImageButton? = null
+    private var titleView: TextView? = null
+    private var popularity: TextView? = null
+    private var rate: TextView? = null
+    private var image: ImageButton? = null
 
     init {
-        mTitleView = itemView.findViewById(R.id.list_title)
-        mPopularity = itemView.findViewById(R.id.list_popularity)
-        mRate = itemView.findViewById(R.id.list_rate)
-        mImage = itemView.image
+
+        titleView = itemView.list_title
+        popularity = itemView.list_popularity
+        rate = itemView.list_rate
+        image = itemView.image
     }
 
     fun bind(movie: Movie) {
-        mTitleView?.text = movie.title
-        mPopularity?.text = "popularity : ${ movie.popularity}"
-        mRate?.text = "rate  : ${ movie.voteAverage}"
-        Picasso.get().load("https://image.tmdb.org/t/p/w185${movie.posterPath}").into(mImage);
+        titleView?.text = movie.title
+        popularity?.text = "popularity : ${movie.popularity}"
+        rate?.text = "rate  : ${movie.voteAverage}"
+        Picasso.get().load("https://image.tmdb.org/t/p/w185${movie.posterPath}").into(image);
     }
 
 }
