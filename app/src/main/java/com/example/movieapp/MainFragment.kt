@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.crawler.pojo.Movie
+import com.example.movieapp.frontUtil.isTablet
 import com.example.movieapp.viewModel.MainViewModel
 import com.example.movieapp.viewModel.TypeDisplay
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -66,7 +67,11 @@ class MainFragment : Fragment() {
 
     private fun loadListOfMovies(movies: LiveData<List<Movie>>) {
         list_recycler_view.apply {
-            layoutManager = GridLayoutManager(activity, 2)
+            layoutManager =
+                if (this.let { activity?.let { it1 -> isTablet(it1) } }!!) GridLayoutManager(
+                    activity,
+                    3
+                ) else GridLayoutManager(activity, 1)
             movies
                 .observe(
                     viewLifecycleOwner,
