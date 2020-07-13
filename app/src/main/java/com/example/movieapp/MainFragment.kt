@@ -31,6 +31,15 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        listRecyclerView.apply {
+            layoutManager =
+                if (this.let { activity?.let { it1 -> isTablet(it1) } }!!) GridLayoutManager(
+                    activity,
+                    3
+                ) else GridLayoutManager(activity, 1)
+
+            adapter = ListAdapter()
+        }
         loadListOfMovies(viewModel.getListCurrent())
     }
 
@@ -67,13 +76,6 @@ class MainFragment : Fragment() {
 
     private fun loadListOfMovies(movies: LiveData<List<Movie>>) {
         listRecyclerView.apply {
-            layoutManager =
-                if (this.let { activity?.let { it1 -> isTablet(it1) } }!!) GridLayoutManager(
-                    activity,
-                    3
-                ) else GridLayoutManager(activity, 1)
-
-            adapter = ListAdapter()
 
             movies
                 .observe(
