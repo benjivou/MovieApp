@@ -1,10 +1,11 @@
 package com.example.movieapp
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.movieapp.R.string.item_pop
+import com.example.movieapp.R.string.item_rate
 import com.example.movieapp.crawler.pojo.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item.view.*
@@ -14,7 +15,7 @@ class ListAdapter(private val list: List<Movie>) : RecyclerView.Adapter<MovieVie
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return MovieViewHolder(inflater, parent)
+        return MovieViewHolder(inflater.inflate(R.layout.list_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
@@ -26,29 +27,21 @@ class ListAdapter(private val list: List<Movie>) : RecyclerView.Adapter<MovieVie
 
 }
 
-class MovieViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
-    RecyclerView.ViewHolder(inflater.inflate(R.layout.list_item, parent, false)) {
+class MovieViewHolder(itemView: View) :
+    RecyclerView.ViewHolder(itemView) {
 
     private val TAG = "ListAdapter"
 
-    private var titleView: TextView? = null
-    private var popularity: TextView? = null
-    private var rate: TextView? = null
-    private var image: ImageButton? = null
-
-    init {
-
-        titleView = itemView.list_title
-        popularity = itemView.list_popularity
-        rate = itemView.list_rate
-        image = itemView.image
-    }
 
     fun bind(movie: Movie) {
-        titleView?.text = movie.title
-        popularity?.text = "popularity : ${movie.popularity}"
-        rate?.text = "rate  : ${movie.voteAverage}"
-        Picasso.get().load("https://image.tmdb.org/t/p/w185${movie.posterPath}").into(image);
+        itemView.list_title.text = movie.title
+        itemView.list_popularity.text =
+            """${itemView.context.getString(item_pop)} ${movie.popularity}"""
+        itemView.list_rate.text =
+            """${this.itemView.context.getString(item_rate)} ${movie.voteAverage}"""
+        Picasso.get().load("https://image.tmdb.org/t/p/w185${movie.posterPath}")
+            .into(itemView.image)
+
     }
 
 }
