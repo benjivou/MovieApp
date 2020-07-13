@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.movieapp.R.string.item_pop
-import com.example.movieapp.R.string.item_rate
+import com.example.movieapp.R.string.itemPopularity
+import com.example.movieapp.R.string.itemRate
 import com.example.movieapp.crawler.pojo.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item.view.*
@@ -36,9 +36,9 @@ class MovieViewHolder(itemView: View) :
     fun bind(movie: Movie) {
         itemView.listTitle.text = movie.title
         itemView.listPopularity.text =
-            """${itemView.context.getString(item_pop)} ${movie.popularity}"""
+            """${itemView.context.getString(itemPopularity)} ${movie.popularity}"""
         itemView.listRate.text =
-            """${this.itemView.context.getString(item_rate)} ${movie.voteAverage}"""
+            """${this.itemView.context.getString(itemRate)} ${movie.voteAverage}"""
         Picasso.get().load("https://image.tmdb.org/t/p/w185${movie.posterPath}")
             .into(itemView.image)
 

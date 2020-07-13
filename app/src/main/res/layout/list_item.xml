@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:contentDescription="@string/the_movie_poster" />
+        android:contentDescription="@string/mockPoster" />
 
     <TextView
         android:id="@+id/listTitle"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
 
-        android:text="@string/title"
+        android:text="@string/mockTitle"
         android:textStyle="bold" />
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
 
-        android:text="@string/description" />
+        android:text="@string/mockDescription" />
 
     <TextView
         android:id="@+id/listRate"
@@ -35,6 +35,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
 
-        android:text="@string/description" />
+        android:text="@string/mockDescription" />
 
 </LinearLayout>

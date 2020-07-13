@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/mode_like"
-        android:title="like" />
+        android:id="@+id/displayMoviesLiked"
+        android:title="@string/likedMovies" />
     <item
-        android:id="@+id/mode_popular"
-        android:title="popular" />
+        android:id="@+id/displayMoviesPopular"
+        android:title="@string/popularMovies" />
     <item
-        android:id="@+id/mode_rated"
-        android:title="most_rated" />
+        android:id="@+id/displayMoviesMostRated"
+        android:title="@string/mostRatedMovies" />
 </menu>
