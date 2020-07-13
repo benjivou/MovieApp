@@ -50,9 +50,9 @@ class MainFragment : Fragment() {
         loadListOfMovies(
             viewModel.getList(
                 when (item.itemId) {
-                    R.id.mode_like -> TypeDisplay.LIKED
-                    R.id.mode_popular -> TypeDisplay.POPULAR
-                    R.id.mode_rated -> TypeDisplay.RATED
+                    R.id.displayMoviesLiked -> TypeDisplay.LIKED
+                    R.id.displayMoviesPopular -> TypeDisplay.POPULAR
+                    R.id.displayMoviesMostRated -> TypeDisplay.RATED
                     else -> TypeDisplay.POPULAR
                 }
             )
@@ -66,18 +66,23 @@ class MainFragment : Fragment() {
     }
 
     private fun loadListOfMovies(movies: LiveData<List<Movie>>) {
-        list_recycler_view.apply {
+        listRecyclerView.apply {
             layoutManager =
                 if (this.let { activity?.let { it1 -> isTablet(it1) } }!!) GridLayoutManager(
                     activity,
                     3
                 ) else GridLayoutManager(activity, 1)
+
+            adapter = ListAdapter()
+
             movies
                 .observe(
                     viewLifecycleOwner,
                     Observer {
-                        adapter = ListAdapter(it)
-                    }) // TO-DO réutiliser les adapteurs se former dessus
+                        val adapter = listRecyclerView.adapter as ListAdapter
+                        adapter.changeData(it) // change data
+                    })
         }
+
     }
 }

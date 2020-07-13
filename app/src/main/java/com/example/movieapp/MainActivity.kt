@@ -14,14 +14,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutResId)
-        val fm = supportFragmentManager
-        var fragment = fm.findFragmentById(R.id.fragment_container)
+
+        var fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
 
         // ensures fragments already created will not be created
         if (fragment == null) {
             fragment = MainFragment.newInstance()
             // create and commit a fragment transaction
-            fm.beginTransaction()
+            supportFragmentManager.beginTransaction()
                 .add(R.id.fragment_container, fragment)
                 .commit()
         }

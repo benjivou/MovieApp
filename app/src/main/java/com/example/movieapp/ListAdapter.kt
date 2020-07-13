@@ -10,8 +10,14 @@ import com.example.movieapp.crawler.pojo.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item.view.*
 
-class ListAdapter(private val list: List<Movie>) : RecyclerView.Adapter<MovieViewHolder>() {
+class ListAdapter() : RecyclerView.Adapter<MovieViewHolder>() {
 
+    private var list: List<Movie> = listOf()
+
+    fun changeData(list: List<Movie>){
+        this.list = list
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val inflater = LayoutInflater.from(parent.context)
