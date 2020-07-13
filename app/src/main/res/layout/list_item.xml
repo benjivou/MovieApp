@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
     <TextView
-        android:id="@+id/list_title"
+        android:id="@+id/listTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -20,14 +20,14 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/list_popularity"
+        android:id="@+id/listPopularity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
 
         android:text="@string/description" />
     <TextView
-        android:id="@+id/list_rate"
+        android:id="@+id/listRate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

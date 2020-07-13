@@ -34,10 +34,10 @@ class MovieViewHolder(itemView: View) :
 
 
     fun bind(movie: Movie) {
-        itemView.list_title.text = movie.title
-        itemView.list_popularity.text =
+        itemView.listTitle.text = movie.title
+        itemView.listPopularity.text =
             """${itemView.context.getString(item_pop)} ${movie.popularity}"""
-        itemView.list_rate.text =
+        itemView.listRate.text =
             """${this.itemView.context.getString(item_rate)} ${movie.voteAverage}"""
         Picasso.get().load("https://image.tmdb.org/t/p/w185${movie.posterPath}")
             .into(itemView.image)
