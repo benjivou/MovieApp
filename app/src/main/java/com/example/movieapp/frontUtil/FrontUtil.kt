@@ -1,11 +1,8 @@
 package com.example.movieapp.frontUtil
 
 import android.app.Activity
-import android.content.Context
-import android.content.res.Configuration
-import android.graphics.Point
 import android.util.DisplayMetrics
-import android.view.Display
+import kotlin.math.sqrt
 
 
 /**
@@ -13,7 +10,7 @@ import android.view.Display
  */
 fun isTablet(activity: Activity): Boolean {
 
-    return getScreenSizeInches(activity)>7
+    return getScreenSizeInches(activity) > 7
 }
 
 fun getScreenSizeInches(activity: Activity): Double {
@@ -26,5 +23,5 @@ fun getScreenSizeInches(activity: Activity): Double {
     activity.windowManager.defaultDisplay.getMetrics(dm)
     val x = Math.pow(displayMetrics.widthPixels / dm.xdpi.toDouble(), 2.0)
     val y = Math.pow(displayMetrics.heightPixels / dm.ydpi.toDouble(), 2.0)
-    return Math.sqrt(x + y)
+    return sqrt(x + y)
 }
