@@ -2,6 +2,7 @@ package com.example.movieapp.frontUtil
 
 import android.app.Activity
 import android.util.DisplayMetrics
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 
@@ -21,7 +22,7 @@ fun getScreenSizeInches(activity: Activity): Double {
 
     val dm = DisplayMetrics()
     activity.windowManager.defaultDisplay.getMetrics(dm)
-    val x = Math.pow(displayMetrics.widthPixels / dm.xdpi.toDouble(), 2.0)
-    val y = Math.pow(displayMetrics.heightPixels / dm.ydpi.toDouble(), 2.0)
+    val x = (displayMetrics.widthPixels / dm.xdpi.toDouble()).pow(2.0)
+    val y = (displayMetrics.heightPixels / dm.ydpi.toDouble()).pow(2.0)
     return sqrt(x + y)
 }
