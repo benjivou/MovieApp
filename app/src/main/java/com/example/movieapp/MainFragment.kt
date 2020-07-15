@@ -32,14 +32,22 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         listRecyclerView.apply {
+            // init the layout manager to gridLayout
             layoutManager =
+
+                // layout manager for tablet( or device above 7 inches screens
                 if (this.let { activity?.let { it1 -> isTablet(it1) } }!!) GridLayoutManager(
                     activity,
                     3
-                ) else GridLayoutManager(activity, 1)
+                )
 
+                // layout manager for phones below 7 inches screens
+                else GridLayoutManager(activity, 1)
+
+            // init the adapter to the good value
             adapter = ListAdapter()
         }
+        // load info in the adapter
         loadListOfMovies(viewModel.getListCurrent())
     }
 
@@ -52,8 +60,6 @@ class MainFragment : Fragment() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        // Unsubscribe to the last LiveData
-        viewModel.getListCurrent().removeObserver { }
 
         // subscribe to the new LiveData
         loadListOfMovies(
@@ -77,14 +83,20 @@ class MainFragment : Fragment() {
     private fun loadListOfMovies(movies: LiveData<List<Movie>>) {
         listRecyclerView.apply {
 
+            //remove sub cause we don't need anymore
+            viewModel.getListCurrent().removeObserver { }
+
+            // change the Recyclerview values
             movies
                 .observe(
                     viewLifecycleOwner,
                     Observer {
-                        val adapter = listRecyclerView.adapter as ListAdapter
-                        adapter.changeData(it) // change data
+                        (adapter as ListAdapter).apply {
+                            changeData(it)
+                        } // change data
                     })
         }
 
     }
 }
+

@@ -14,7 +14,8 @@ class ListAdapter() : RecyclerView.Adapter<MovieViewHolder>() {
 
     private var list: List<Movie> = listOf()
 
-    fun changeData(list: List<Movie>){
+    // change data and notify the change to RecyclerView
+    fun changeData(list: List<Movie>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -33,20 +34,24 @@ class ListAdapter() : RecyclerView.Adapter<MovieViewHolder>() {
 
 }
 
-class MovieViewHolder(itemView: View) :
-    RecyclerView.ViewHolder(itemView) {
-
-    private val TAG = "ListAdapter"
-
+class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(movie: Movie) {
-        itemView.listTitle.text = movie.title
-        itemView.listPopularity.text =
-            """${itemView.context.getString(itemPopularity)} ${movie.popularity}"""
-        itemView.listRate.text =
-            """${this.itemView.context.getString(itemRate)} ${movie.voteAverage}"""
-        Picasso.get().load("https://image.tmdb.org/t/p/w185${movie.posterPath}")
-            .into(itemView.image)
+
+        itemView.run {
+
+            listTitle.text = movie.title
+
+            listPopularity.text =
+                """${context.getString(itemPopularity)} ${movie.popularity}"""
+
+            listRate.text =
+                """${context.getString(itemRate)} ${movie.voteAverage}"""
+
+            Picasso.get().load("https://image.tmdb.org/t/p/w185${movie.posterPath}")
+                .into(image)
+        }
+
 
     }
 
