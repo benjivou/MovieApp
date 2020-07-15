@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.example.movieapp.crawler.TypeList
 import com.example.movieapp.crawler.internetCall
 import com.example.movieapp.crawler.pojo.Movie
+import com.example.movieapp.likesmanager.App
 
 /**
  * Created by Benjamin Vouillon on 08,July,2020
@@ -18,18 +19,16 @@ enum class TypeDisplay() {
 
 class MainViewModel : ViewModel() {
 
-
     /**
      * Our 3 lists of Movies
      */
-    var popular: LiveData<List<Movie>>? = null
-    var rated: LiveData<List<Movie>>? = null
-
-
+    private var popular: LiveData<List<Movie>>? = null
+    private var rated: LiveData<List<Movie>>? = null
+    private var liked: LiveData<List<Movie>>? = null
     /**
      * Type of the list displayed
      */
-    var typeDisplay: TypeDisplay = TypeDisplay.POPULAR
+    private var typeDisplay: TypeDisplay = TypeDisplay.POPULAR
 
     /*
     return the list of elements necessary
@@ -37,7 +36,6 @@ class MainViewModel : ViewModel() {
     fun getListCurrent(): LiveData<List<Movie>> {
         return getList(typeDisplay)
     }
-
 
     fun getList(typeDisplay: TypeDisplay): LiveData<List<Movie>> {
         this.typeDisplay = typeDisplay
@@ -50,7 +48,10 @@ class MainViewModel : ViewModel() {
                 rated = internetCall(TypeList.HIGHEST_RATE)
                 rated
             }
-            TypeDisplay.LIKED -> TODO("Room not implemented, so Likes doesn't exist")
+            TypeDisplay.LIKED -> {
+                liked = App.database.movieDAO().getAll()
+                liked
+            }
         }!!
     }
 
