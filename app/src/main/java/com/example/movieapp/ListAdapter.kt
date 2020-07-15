@@ -43,10 +43,10 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             listTitle.text = movie.title
 
             listPopularity.text =
-                resources.getString(itemPopularity,movie.popularity.toString())
+                resources.getString(itemPopularity, movie.popularity.toString())
 
             listRate.text =
-                resources.getString(itemRate,movie.voteAverage.toString())
+                resources.getString(itemRate, movie.voteAverage.toString())
 
             Picasso.get().load("https://image.tmdb.org/t/p/w185${movie.posterPath}")
                 .into(image)

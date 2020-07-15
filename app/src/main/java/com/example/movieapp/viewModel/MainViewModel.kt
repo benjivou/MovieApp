@@ -1,6 +1,5 @@
 package com.example.movieapp.viewModel
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.movieapp.crawler.TypeList

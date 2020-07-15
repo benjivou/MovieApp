@@ -35,7 +35,7 @@ class MainFragment : Fragment() {
             // init the layout manager to gridLayout
             layoutManager =
 
-                // layout manager for tablet( or device above 7 inches screens
+                    // layout manager for tablet( or device above 7 inches screens
                 if (this.let { activity?.let { it1 -> isTablet(it1) } }!!) GridLayoutManager(
                     activity,
                     3
