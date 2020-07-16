@@ -1,6 +1,5 @@
 package com.example.movieapp.viewModel
 
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.example.movieapp.crawler.TypeList
@@ -11,7 +10,7 @@ import com.example.movieapp.crawler.pojo.Movie
  * Created by Benjamin Vouillon on 08,July,2020
  */
 
-enum class TypeDisplay() {
+enum class TypeDisplay {
     POPULAR,
     RATED,
     LIKED
@@ -23,14 +22,14 @@ class MainViewModel : ViewModel() {
     /**
      * Our 3 lists of Movies
      */
-    var popular: LiveData<List<Movie>>? = null
-    var rated: LiveData<List<Movie>>? = null
+    private var popular: LiveData<List<Movie>>? = null
+    private var rated: LiveData<List<Movie>>? = null
 
 
     /**
      * Type of the list displayed
      */
-    var typeDisplay: TypeDisplay = TypeDisplay.POPULAR
+    private var typeDisplay: TypeDisplay = TypeDisplay.POPULAR
 
     /*
     return the list of elements necessary

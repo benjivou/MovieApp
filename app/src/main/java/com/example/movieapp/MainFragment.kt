@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.crawler.pojo.Movie
+import com.example.movieapp.databinding.FragmentMainBinding
 import com.example.movieapp.frontUtil.isTablet
 import com.example.movieapp.viewModel.MainViewModel
 import com.example.movieapp.viewModel.TypeDisplay
@@ -27,15 +28,14 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? =
-        inflater.inflate(R.layout.fragment_main, container, false)
+        FragmentMainBinding.inflate(inflater,container,false).root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         listRecyclerView.apply {
             // init the layout manager to gridLayout
             layoutManager =
-
-                // layout manager for tablet( or device above 7 inches screens
+                    // layout manager for tablet( or device above 7 inches screens
                 if (this.let { activity?.let { it1 -> isTablet(it1) } }!!) GridLayoutManager(
                     activity,
                     3
@@ -45,7 +45,7 @@ class MainFragment : Fragment() {
                 else GridLayoutManager(activity, 1)
 
             // init the adapter to the good value
-            adapter = ListAdapter()
+            adapter = ListAdapter(context)
         }
         // load info in the adapter
         loadListOfMovies(viewModel.getListCurrent())
@@ -59,8 +59,6 @@ class MainFragment : Fragment() {
      * the idea is to the current list display and get the new list
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-
         // subscribe to the new LiveData
         loadListOfMovies(
             viewModel.getList(
