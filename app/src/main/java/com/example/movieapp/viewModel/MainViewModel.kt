@@ -18,13 +18,11 @@ enum class TypeDisplay {
 
 class MainViewModel : ViewModel() {
 
-
     /**
      * Our 3 lists of Movies
      */
     private var popular: LiveData<List<Movie>>? = null
     private var rated: LiveData<List<Movie>>? = null
-
 
     /**
      * Type of the list displayed
