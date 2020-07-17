@@ -6,15 +6,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.movieapp.crawler.TypeDisplay
 import com.example.movieapp.databinding.FragmentMainBinding
 import com.example.movieapp.viewModel.MainViewModel
-import com.example.movieapp.viewModel.TypeDisplay
 import kotlinx.android.synthetic.main.fragment_main.*
-
 
 class MainFragment : Fragment() {
     private val viewModel: MainViewModel by activityViewModels()
-
+    lateinit var adapterList: ListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -29,24 +28,20 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        // setup the RecyclerView
         listRecyclerView.apply {
             // init the layout manager to gridLayout
             layoutManager = GridLayoutManager(activity, resources.getInteger(R.integer.isTablet))
-
             // init the adapter to the good value
-            adapter = ListAdapter(context)
-
-            viewModel
-                .getListCurrent()
-                .observe(viewLifecycleOwner, Observer { movies ->
-                    (adapter as ListAdapter).apply {
-                        changeData(movies)
-                    }
-                })
+            adapterList = ListAdapter(context)
+            adapter = adapterList
         }
 
-
+        viewModel
+            .getListCurrent()
+            .observe(viewLifecycleOwner, Observer { movies ->
+                adapterList.changeData(movies)
+            })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -57,8 +52,7 @@ class MainFragment : Fragment() {
      * the idea is to the current list display and get the new list
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // subscribe to the new LiveData
-
+        // change the list in the modelView
         viewModel.getList(
             when (item.itemId) {
                 R.id.displayMoviesLiked -> TypeDisplay.LIKED
@@ -67,7 +61,6 @@ class MainFragment : Fragment() {
                 else -> TypeDisplay.POPULAR
             }
         )
-
         return true
     }
 
