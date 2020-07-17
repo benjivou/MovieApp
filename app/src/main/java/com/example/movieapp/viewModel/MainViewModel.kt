@@ -1,6 +1,7 @@
 package com.example.movieapp.viewModel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.movieapp.crawler.TypeList
 import com.example.movieapp.crawler.internetCall
@@ -21,35 +22,45 @@ class MainViewModel : ViewModel() {
     /**
      * Our 3 lists of Movies
      */
-    private var popular: LiveData<List<Movie>>? = null
-    private var rated: LiveData<List<Movie>>? = null
+    private var currentList: MutableLiveData<List<Movie>> = MutableLiveData<List<Movie>>()
 
     /**
      * Type of the list displayed
      */
-    private var typeDisplay: TypeDisplay = TypeDisplay.POPULAR
+    private var typeDisplay: MutableLiveData<TypeDisplay> = MutableLiveData<TypeDisplay>(TypeDisplay.POPULAR)
+
+    init {
+        // Change mean that we need to get another list
+        typeDisplay.observeForever {
+            changeValue(it)
+        }
+    }
 
     /*
     return the list of elements necessary
      */
     fun getListCurrent(): LiveData<List<Movie>> {
-        return getList(typeDisplay)
+        return currentList
     }
 
+    fun getList(typeDisplay: TypeDisplay) {
+        this.typeDisplay.value = typeDisplay
+    }
 
-    fun getList(typeDisplay: TypeDisplay): LiveData<List<Movie>> {
-        this.typeDisplay = typeDisplay
-        return when (typeDisplay) {
+    private fun changeValue(typeDisplay: TypeDisplay) {
+        currentList.value = when (typeDisplay) {
             TypeDisplay.POPULAR -> {
-                popular = internetCall(TypeList.POPULAR)
-                popular
+                internetCall(TypeList.POPULAR)
             }
             TypeDisplay.RATED -> {
-                rated = internetCall(TypeList.HIGHEST_RATE)
-                rated
+                internetCall(TypeList.HIGHEST_RATE)
             }
             TypeDisplay.LIKED -> TODO("Room not implemented, so Likes doesn't exist")
-        }!!
+        }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        typeDisplay.removeObserver { }
+    }
 }

@@ -1,12 +1,10 @@
 package com.example.movieapp.crawler
 
-import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.example.movieapp.crawler.pojo.Movie
 import com.example.movieapp.crawler.pojo.ResultPage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -40,38 +38,21 @@ interface MoviesService {
     ): Call<ResultPage>
 }
 
-fun internetCall(type: TypeList): MutableLiveData<List<Movie>> {
-    val moviesRes = MutableLiveData<List<Movie>>()
+fun internetCall(type: TypeList): List<Movie> {
 
-    val retrofit = Retrofit.Builder()
-        .baseUrl(URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+    var call: ResultPage? = null
 
-    val service = retrofit.create(MoviesService::class.java)
+    runBlocking(Dispatchers.IO) {
+        val service = Retrofit.Builder()
+            .baseUrl(URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(MoviesService::class.java)
 
-    service.listOfMovies(type.s)
-        .enqueue(object : Callback<ResultPage> {
-            override fun onResponse(call: Call<ResultPage>, response: Response<ResultPage>) {
+        val toto = service.listOfMovies(type.s).execute().body()
 
-                val allData = response.body()
+        call = toto
 
-                if (allData != null) {
-                    Log.i(TAG, "onResponse: all elements are in the phone ")
-
-                    for (c in allData.results)
-                        Log.d(TAG, "onResponse:   $c ")
-
-                    moviesRes.value = allData.results
-                }
-            }
-
-            override fun onFailure(call: Call<ResultPage>, t: Throwable) {
-                Log.e(TAG, "onFailure: ${t.message}")
-
-            }
-        })
-
-
-    return moviesRes
+    }
+    return call?.results ?: listOf()
 }
