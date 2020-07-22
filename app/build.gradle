@@ -2,6 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+
 android {
     compileSdkVersion 29
 
@@ -22,9 +24,7 @@ android {
         }
     }
     repositories {
-
         mavenCentral()
-
     }
 
     buildFeatures {
@@ -50,8 +50,9 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
 
     // Retrofit
-    ext.retrofit_version = '2.4.0'
+    ext.retrofit_version = '2.6.0'
     ext.okhttp_version = '3.11.0'
+    def nav_version = "2.3.0"
     //noinspection GradleDependency
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     //noinspection GradleDependency
@@ -68,4 +69,10 @@ dependencies {
     def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+
+    implementation "androidx.cardview:cardview:1.0.0"
+
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
 }

@@ -51,7 +51,6 @@ proguard/
 captures/
 
 # IntelliJ
-*.iml
 .idea/*
 !.idea/codeStyles
 .idea/.name
@@ -100,7 +99,6 @@ lint/tmp/
 lint/reports/
 
 # Ignore Mac DS_Store files
-.DS_Store
 **/.DS_Store
 
 # Secrets
