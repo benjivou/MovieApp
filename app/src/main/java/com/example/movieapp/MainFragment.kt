@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : Fragment() {
     private val viewModel: MainViewModel by activityViewModels()
-    lateinit var adapterList: ListAdapter
+    private lateinit var adapterList: ListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -28,12 +28,14 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        adapterList = ListAdapter(requireContext())
+
         // setup the RecyclerView
         listRecyclerView.apply {
-            // init the layout manager to gridLayout
-            layoutManager = GridLayoutManager(activity, resources.getInteger(R.integer.isTablet))
+
+            layoutManager = GridLayoutManager(activity, resources.getInteger(R.integer.numberspan))
             // init the adapter to the good value
-            adapterList = ListAdapter(context)
             adapter = adapterList
         }
 

@@ -9,6 +9,7 @@ import com.squareup.picasso.Picasso
 /**
  * Created by Benjamin Vouillon on 15,July,2020
  */
+const val PURL = "https://image.tmdb.org/t/p/w185"
 
 class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val binding = ListItemBinding.bind(itemView)
@@ -25,7 +26,7 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 listRate.text =
                     getString(R.string.itemRate, movie.voteAverage.toString())
 
-                Picasso.get().load("https://image.tmdb.org/t/p/w185${movie.posterPath}")
+                Picasso.get().load(PURL + movie.posterPath)
                     .into(image)
             }
         }
