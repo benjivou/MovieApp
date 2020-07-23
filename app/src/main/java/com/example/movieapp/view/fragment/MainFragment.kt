@@ -2,19 +2,16 @@ package com.example.movieapp.view.fragment
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.movieapp.view.ListAdapter
 import com.example.movieapp.R
 import com.example.movieapp.crawler.TypeDisplay
 import com.example.movieapp.databinding.FragmentMainBinding
-import com.example.movieapp.viewModel.MainViewModel
+import com.example.movieapp.view.fragment.holder.ListAdapter
 import kotlinx.android.synthetic.main.fragment_main.*
 
-class MainFragment : Fragment() {
-    private val viewModel: MainViewModel by activityViewModels()
+class MainFragment : AbstractFragment() {
+
     private lateinit var adapterList: ListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +28,8 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapterList = ListAdapter(requireContext())
+        adapterList =
+            ListAdapter(requireContext())
         // setup the RecyclerView
         listRecyclerView.apply {
 

@@ -1,4 +1,4 @@
-package com.example.movieapp.view
+package com.example.movieapp.view.fragment.holder
 
 import android.content.Context
 import android.view.LayoutInflater

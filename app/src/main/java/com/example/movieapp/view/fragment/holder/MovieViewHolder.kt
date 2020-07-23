@@ -1,12 +1,14 @@
-package com.example.movieapp.view
+package com.example.movieapp.view.fragment.holder
 
 import android.util.Log
 import android.view.View
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
-import com.example.movieapp.model.Movie
 import com.example.movieapp.databinding.ListItemBinding
 import com.example.movieapp.likesmanager.App
+import com.example.movieapp.model.Movie
+import com.example.movieapp.view.fragment.MainFragmentDirections
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -23,7 +25,7 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var movie: Movie? = null
 
 
-    fun bind(movie: Movie) {
+    fun bind(movie: Movie, positionInCurrentList: Int) {
 
         this.movie = movie
 
@@ -47,6 +49,9 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 movie,
                 binding
             )
+        )
+        binding.image.setOnClickListener(
+            PictureClicker(movie, binding)
         )
     }
 
@@ -77,6 +82,18 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 }
             }
         }
+    }
+
+    class PictureClicker(val movie: Movie, private val binding: ListItemBinding) :
+        View.OnClickListener {
+        override fun onClick(v: View?) {
+            val action = MainFragmentDirections.actionMainFragmentToDetailFragment()
+            val toto =
+                binding.root.findNavController().navigate(action)
+            Log.d(TAG, "onClick: the image is clicked")
+
+        }
+
     }
 
 
