@@ -1,7 +1,6 @@
 package com.example.movieapp.crawler
 
-import com.example.movieapp.crawler.pojo.ResultPage
-import retrofit2.Call
+import androidx.lifecycle.MutableLiveData
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -16,6 +15,6 @@ interface MoviesService {
     fun listOfMovies(
         @Path("type") type: String,
         @Query("api_key") s: String = KEY_PRIVATE
-    ): Call<ResultPage>
+    ): MutableLiveData<ApiResponse<ResultPage>>
 }
 
