@@ -18,14 +18,14 @@ import kotlinx.coroutines.launch
  * Created by Benjamin Vouillon on 15,July,2020
  */
 const val PURL = "https://image.tmdb.org/t/p/w185"
-private val TAG = "MovieViewHolder"
+private const val TAG = "MovieViewHolder"
 
 class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val binding = ListItemBinding.bind(itemView)
     private var movie: Movie? = null
 
 
-    fun bind(movie: Movie, positionInCurrentList: Int) {
+    fun bind(movie: Movie) {
 
         this.movie = movie
 
@@ -51,7 +51,7 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             )
         )
         binding.image.setOnClickListener(
-            PictureClicker(movie, binding)
+            PictureClicker(movie)
         )
     }
 
@@ -84,17 +84,13 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
     }
 
-    class PictureClicker(val movie: Movie, private val binding: ListItemBinding) :
+    class PictureClicker(val movie: Movie) :
         View.OnClickListener {
         override fun onClick(v: View?) {
-            val action = MainFragmentDirections.actionMainFragmentToDetailFragment()
+            val action = MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id)
             val toto =
-                binding.root.findNavController().navigate(action)
+                v!!.findNavController().navigate(action)
             Log.d(TAG, "onClick: the image is clicked")
-
         }
-
     }
-
-
 }
