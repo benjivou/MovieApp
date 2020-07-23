@@ -1,6 +1,6 @@
 package com.example.movieapp.crawler
 
-import com.example.movieapp.crawler.pojo.Movie
+import com.example.movieapp.model.Movie
 import com.google.gson.annotations.SerializedName
 
 /**

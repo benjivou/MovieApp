@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.movieapp.crawler.*
-import com.example.movieapp.crawler.pojo.Movie
+import com.example.movieapp.model.Movie
 import com.example.movieapp.likesmanager.App
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
