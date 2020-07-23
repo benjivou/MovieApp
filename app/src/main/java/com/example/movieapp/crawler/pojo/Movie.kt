@@ -9,7 +9,7 @@ data class Movie(
     @SerializedName("popularity") val popularity: Float,
     @SerializedName("vote_pount") val votePount: Int,
     @SerializedName("video") val video: Boolean,
-    @SerializedName("posterPath") val posterPath: String,
+    @SerializedName("poster_path") val posterPath: String,
     @SerializedName("id") val id: Int,
     @SerializedName("adult") val adult: Boolean,
     @SerializedName("backdrop_path") val backdropPath: String,
