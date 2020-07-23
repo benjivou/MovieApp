@@ -8,7 +8,8 @@ import com.example.movieapp.databinding.ListItemBinding
 import com.example.movieapp.likesmanager.App
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 /**
  * Created by Benjamin Vouillon on 15,July,2020
@@ -40,51 +41,34 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                     .into(image)
             }
         }
-
         binding.likeBtn.setOnClickListener(LikeClicker(movie, binding))
     }
 
     class LikeClicker(val movie: Movie, private val binding: ListItemBinding) :
         View.OnClickListener {
 
-        private var liked =
-            runBlocking(Dispatchers.IO) { App.database.movieDAO().isLiked(movie.id) }
-
         init {
-            if (liked) {
-                binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
-            } else {
-                binding.likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
+            MainScope().launch(Dispatchers.IO) {
+                if (App.database.movieDAO().isLiked(movie.id)) {
+                    binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
+                } else {
+                    binding.likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
+                }
             }
         }
 
         override fun onClick(v: View?) {
-            // if the check is done ( so liked not null )
-            liked = runBlocking(Dispatchers.IO) { App.database.movieDAO().isLiked(movie.id) }
 
-            if (liked) {
-                // if the object is already liked
-                Thread {
+            MainScope().launch(Dispatchers.IO) {
+                if (App.database.movieDAO().isLiked(movie.id)) {
                     movie.let { it1 -> App.database.movieDAO().deleteMovie(it1) }
-                }.start()
-
-                binding.likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
-                Log.d(TAG, "onClick: delete done")
-
-            } else {
-                Thread {
+                    Log.d(TAG, "onClick: delete done")
+                    binding.likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
+                } else {
                     movie.let { it1 -> App.database.movieDAO().insertMovie(it1) }
                     Log.d(TAG, "onClick: job done")
-
-                }.start()
-                val toto = App.database.movieDAO().getAll().observeForever {
-                    Log.d(
-                        TAG,
-                        "onClick: display elements ${it.size}"
-                    )
+                    binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
                 }
-
-                binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
             }
         }
     }
