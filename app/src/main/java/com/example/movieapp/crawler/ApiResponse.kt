@@ -23,7 +23,10 @@ sealed class ApiResponse<T> {
                     ApiSuccessResponse(body)
                 }
             } else {
-                ApiErrorResponse(response.code(), response.errorBody()?.string()?:response.message())
+                ApiErrorResponse(
+                    response.code(),
+                    response.errorBody()?.string() ?: response.message()
+                )
             }
         }
 
@@ -34,5 +37,5 @@ sealed class ApiResponse<T> {
 }
 
 class ApiEmptyResponse<T> : ApiResponse<T>()
-data class ApiErrorResponse<T>(val errorCode: Int, val errorMessage: String): ApiResponse<T>()
-data class ApiSuccessResponse<T>(val body: T): ApiResponse<T>()
+data class ApiErrorResponse<T>(val errorCode: Int, val errorMessage: String) : ApiResponse<T>()
+data class ApiSuccessResponse<T>(val body: T) : ApiResponse<T>()
