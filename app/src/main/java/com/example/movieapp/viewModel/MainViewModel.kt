@@ -17,10 +17,9 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 
 const val URL = "https://api.themoviedb.org/3/movie/"
-
+private const val TAG = "MainViewModel"
 
 class MainViewModel : ViewModel() {
-    private val TAG = "MainViewModel"
 
     /**
      * Type of the list displayed
