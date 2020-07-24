@@ -32,8 +32,7 @@ class MainViewModel : ViewModel() {
     private var likedList = App.database.movieDAO().getAll()
     private var movieList = Transformations.switchMap<TypeDisplay, List<Movie>>(
         this.typeDisplay
-    )
-    {
+    ) {
         if (typeDisplay.value == TypeDisplay.LIKED)
             App.database.movieDAO().getAll()
         else
@@ -92,7 +91,8 @@ class MainViewModel : ViewModel() {
     }
 
     fun insertMovie(movie: Movie) {
-        viewModelScope.launch(Dispatchers.IO) { App.database.movieDAO().insertMovie(movie)
+        viewModelScope.launch(Dispatchers.IO) {
+            App.database.movieDAO().insertMovie(movie)
         }
     }
 
