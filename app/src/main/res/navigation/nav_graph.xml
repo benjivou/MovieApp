@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.movieapp.MainFragment"
+        android:name="com.example.movieapp.view.fragment.MainFragment"
         android:label="MainFragment" />
 </navigation>

@@ -1,11 +1,12 @@
-package com.example.movieapp
+package com.example.movieapp.view
 
 import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.example.movieapp.crawler.pojo.Movie
+import com.example.movieapp.App
+import com.example.movieapp.R
+import com.example.movieapp.model.Movie
 import com.example.movieapp.databinding.ListItemBinding
-import com.example.movieapp.likesmanager.App
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -41,7 +42,12 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                     .into(image)
             }
         }
-        binding.likeBtn.setOnClickListener(LikeClicker(movie, binding))
+        binding.likeBtn.setOnClickListener(
+            LikeClicker(
+                movie,
+                binding
+            )
+        )
     }
 
     class LikeClicker(val movie: Movie, private val binding: ListItemBinding) :

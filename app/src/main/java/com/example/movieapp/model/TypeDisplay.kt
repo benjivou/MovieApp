@@ -1,4 +1,4 @@
-package com.example.movieapp.crawler
+package com.example.movieapp.model
 
 /**
  * Created by Benjamin Vouillon on 17,July,2020

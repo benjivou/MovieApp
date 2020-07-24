@@ -6,9 +6,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.example.movieapp.crawler.*
-import com.example.movieapp.crawler.pojo.Movie
-import com.example.movieapp.likesmanager.App
+import com.example.movieapp.model.Movie
+import com.example.movieapp.App
+import com.example.movieapp.model.TypeDisplay
+import com.example.movieapp.viewModel.internetacces.ApiEmptyResponse
+import com.example.movieapp.viewModel.internetacces.ApiErrorResponse
+import com.example.movieapp.viewModel.internetacces.ApiSuccessResponse
+import com.example.movieapp.viewModel.internetacces.MoviesService
+import com.example.movieapp.viewModel.internetacces.LiveDataCallAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

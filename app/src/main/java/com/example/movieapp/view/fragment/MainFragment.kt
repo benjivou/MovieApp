@@ -1,4 +1,4 @@
-package com.example.movieapp
+package com.example.movieapp.view.fragment
 
 import android.os.Bundle
 import android.view.*
@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.movieapp.crawler.TypeDisplay
+import com.example.movieapp.R
+import com.example.movieapp.model.TypeDisplay
 import com.example.movieapp.databinding.FragmentMainBinding
+import com.example.movieapp.view.ListAdapter
 import com.example.movieapp.viewModel.MainViewModel
 import kotlinx.android.synthetic.main.fragment_main.*
 

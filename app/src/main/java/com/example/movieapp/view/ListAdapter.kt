@@ -1,10 +1,11 @@
-package com.example.movieapp
+package com.example.movieapp.view
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.movieapp.crawler.pojo.Movie
+import com.example.movieapp.R
+import com.example.movieapp.model.Movie
 
 class ListAdapter(private val context: Context) : RecyclerView.Adapter<MovieViewHolder>() {
 
@@ -19,7 +20,8 @@ class ListAdapter(private val context: Context) : RecyclerView.Adapter<MovieView
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
 
         return MovieViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
+            LayoutInflater.from(context)
+                .inflate(R.layout.list_item, parent, false)
         )
     }
 

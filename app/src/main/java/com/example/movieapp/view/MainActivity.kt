@@ -1,4 +1,4 @@
-package com.example.movieapp
+package com.example.movieapp.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

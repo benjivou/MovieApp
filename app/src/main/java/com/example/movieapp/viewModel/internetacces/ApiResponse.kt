@@ -1,4 +1,4 @@
-package com.example.movieapp.crawler
+package com.example.movieapp.viewModel.internetacces
 
 import retrofit2.Response
 
@@ -20,7 +20,9 @@ sealed class ApiResponse<T> {
                 if (body == null || response.code() == 204) {
                     ApiEmptyResponse()
                 } else {
-                    ApiSuccessResponse(body)
+                    ApiSuccessResponse(
+                        body
+                    )
                 }
             } else {
                 ApiErrorResponse(
@@ -31,7 +33,10 @@ sealed class ApiResponse<T> {
         }
 
         fun <T> create(errorCode: Int, error: Throwable): ApiErrorResponse<T> {
-            return ApiErrorResponse(errorCode, error.message ?: "Unknown Error!")
+            return ApiErrorResponse(
+                errorCode,
+                error.message ?: "Unknown Error!"
+            )
         }
     }
 }

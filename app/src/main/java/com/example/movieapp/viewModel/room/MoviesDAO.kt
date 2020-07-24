@@ -1,8 +1,8 @@
-package com.example.movieapp.likesmanager
+package com.example.movieapp.viewModel.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.movieapp.crawler.pojo.Movie
+import com.example.movieapp.model.Movie
 
 /**
  * Created by Benjamin Vouillon on 15,July,2020
