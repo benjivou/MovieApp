@@ -61,6 +61,8 @@ class MainFragment : Fragment() {
                 R.id.displayMoviesLiked -> TypeDisplay.LIKED
                 R.id.displayMoviesPopular -> TypeDisplay.POPULAR
                 R.id.displayMoviesMostRated -> TypeDisplay.RATED
+                R.id.displayMoviesLikedMostPopular-> TypeDisplay.LIKED_POPULAR
+                R.id.displayMoviesLikedMostRated-> TypeDisplay.LIKED_RATED
                 else -> TypeDisplay.POPULAR
             }
         )

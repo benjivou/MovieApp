@@ -10,5 +10,7 @@ package com.example.movieapp.model
 enum class TypeDisplay(val s: String) {
     POPULAR("popular"),
     RATED("top_rated"),
-    LIKED("liked")
+    LIKED("liked"),
+    LIKED_POPULAR("liked_popular"),
+    LIKED_RATED("liked_rated")
 }

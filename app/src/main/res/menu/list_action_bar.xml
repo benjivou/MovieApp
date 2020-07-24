@@ -3,7 +3,16 @@
 
     <item
         android:id="@+id/displayMoviesLiked"
-        android:title="@string/likedMovies" />
+        android:title="@string/likedMovies">
+        <menu>
+            <item
+                android:id="@+id/displayMoviesLikedMostPopular"
+                android:title="@string/likedMovies" />
+            <item
+                android:id="@+id/displayMoviesLikedMostRated"
+                android:title="@string/likedMovies" />
+        </menu>
+    </item>
     <item
         android:id="@+id/displayMoviesPopular"
         android:title="@string/popularMovies" />
