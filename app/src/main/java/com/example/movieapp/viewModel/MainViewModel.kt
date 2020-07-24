@@ -2,10 +2,7 @@ package com.example.movieapp.viewModel
 
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.movieapp.App
 import com.example.movieapp.model.Movie
 import com.example.movieapp.model.TypeDisplay
@@ -29,39 +26,43 @@ class MainViewModel : ViewModel() {
     private var typeDisplay: MutableLiveData<TypeDisplay> =
         MutableLiveData(TypeDisplay.POPULAR)
 
+    // List of raw Movies
     private var likedList = App.database.movieDAO().getAll()
+    private var movieList = Transformations.switchMap<TypeDisplay, List<Movie>>(
+        this.typeDisplay
+    )
+    {
+        if (typeDisplay.value == TypeDisplay.LIKED)
+            App.database.movieDAO().getAll()
+        else
+            internetCall()
+    }
 
-    private var currentList =
-        Transformations.switchMap<TypeDisplay, List<Pair<Movie, Boolean>>>(
-            this.typeDisplay
-        )
-        {
-            val listOfMovies = if (typeDisplay.value == TypeDisplay.LIKED)
-                likedList
-            else
-                internetCall()
+    // List of Movies ready to be displayed
+    private var currentList = MediatorLiveData<List<Pair<Movie, Boolean>>>()
 
-            Transformations.map(listOfMovies) { listOfMovies ->
-                listOfMovies.map { movie ->
-                    Pair(
-                        movie,
-                        likedList.value?.contains(movie)
-                            ?: false
-                    )
-                }
+    init {
+        currentList.addSource(likedList) { listMovies ->
+            val buffer: MutableList<Pair<Movie, Boolean>> = mutableListOf()
+            movieList.value?.forEach { movie ->
+                buffer.add(Pair(movie, listMovies.contains(movie)))
             }
+            currentList.value = buffer
         }
 
-    private fun setLikeOnMovies() {
-        currentList
+        currentList.addSource(movieList) { listMovies ->
+            val buffer: MutableList<Pair<Movie, Boolean>> = mutableListOf()
+            listMovies.forEach { movie ->
+                buffer.add(Pair(movie, likedList.value?.contains(movie) ?: false))
+            }
+            currentList.value = buffer
+        }
     }
 
     /*
     return the list of elements necessary
      */
-    fun getListCurrent(): LiveData<List<Pair<Movie, Boolean>>> {
-        return currentList
-    }
+    fun getListCurrent() = currentList as LiveData<List<Pair<Movie, Boolean>>>
 
     fun getList(typeDisplay: TypeDisplay) {
         this.typeDisplay.value = typeDisplay

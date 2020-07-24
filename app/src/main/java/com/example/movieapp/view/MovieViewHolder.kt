@@ -23,7 +23,7 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var movie: Movie? = null
 
 
-    fun bind(pair: Pair<Movie,Boolean>) {
+    fun bind(pair: Pair<Movie, Boolean>) {
 
         this.movie = pair.first
 
@@ -48,23 +48,17 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 binding
             )
         )
+
+        if (pair.second) {
+            binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
+        } else {
+            binding.likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
+        }
     }
 
     class LikeClicker(val movie: Movie, private val binding: ListItemBinding) :
         View.OnClickListener {
-
-        init {
-            MainScope().launch(Dispatchers.IO) {
-                if (App.database.movieDAO().isLiked(movie.id)) {
-                    binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
-                } else {
-                    binding.likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
-                }
-            }
-        }
-
         override fun onClick(v: View?) {
-
             MainScope().launch(Dispatchers.IO) {
                 if (App.database.movieDAO().isLiked(movie.id)) {
                     movie.let { it1 -> App.database.movieDAO().deleteMovie(it1) }

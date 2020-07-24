@@ -29,7 +29,6 @@ class ListAdapter(private val context: Context) : RecyclerView.Adapter<MovieView
         holder.bind(list[position])
     }
 
-
     override fun getItemCount(): Int = list.size
 
 }
