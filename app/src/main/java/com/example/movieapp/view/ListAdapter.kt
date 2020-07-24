@@ -9,10 +9,10 @@ import com.example.movieapp.model.Movie
 
 class ListAdapter(private val context: Context) : RecyclerView.Adapter<MovieViewHolder>() {
 
-    private var list: List<Movie> = listOf()
+    private var list: List<Pair<Movie,Boolean>> = listOf()
 
     // change data and notify the change to RecyclerView
-    fun changeData(list: List<Movie>) {
+    fun changeData(list: List<Pair<Movie,Boolean>>) {
         this.list = list
         notifyDataSetChanged()
     }

@@ -5,8 +5,8 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.App
 import com.example.movieapp.R
-import com.example.movieapp.model.Movie
 import com.example.movieapp.databinding.ListItemBinding
+import com.example.movieapp.model.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -23,28 +23,28 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var movie: Movie? = null
 
 
-    fun bind(movie: Movie) {
+    fun bind(pair: Pair<Movie,Boolean>) {
 
-        this.movie = movie
+        this.movie = pair.first
 
         binding.apply {
             itemView.resources.apply {
 
-                listTitle.text = movie.title
+                listTitle.text = movie!!.title
 
                 listPopularity.text =
-                    getString(R.string.itemPopularity, movie.popularity.toString())
+                    getString(R.string.itemPopularity, movie!!.popularity.toString())
 
                 listRate.text =
-                    getString(R.string.itemRate, movie.voteAverage.toString())
+                    getString(R.string.itemRate, movie!!.voteAverage.toString())
 
-                Picasso.get().load(PURL + movie.posterPath)
+                Picasso.get().load(PURL + movie!!.posterPath)
                     .into(image)
             }
         }
         binding.likeBtn.setOnClickListener(
             LikeClicker(
-                movie,
+                movie!!,
                 binding
             )
         )
