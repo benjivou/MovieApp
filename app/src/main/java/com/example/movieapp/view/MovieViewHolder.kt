@@ -1,16 +1,12 @@
 package com.example.movieapp.view
 
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.example.movieapp.App
 import com.example.movieapp.R
 import com.example.movieapp.databinding.ListItemBinding
 import com.example.movieapp.model.Movie
+import com.example.movieapp.viewModel.MainViewModel
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 /**
  * Created by Benjamin Vouillon on 15,July,2020
@@ -23,7 +19,7 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var movie: Movie? = null
 
 
-    fun bind(pair: Pair<Movie, Boolean>) {
+    fun bind(pair: Pair<Movie, Boolean>, mainViewModel: MainViewModel) {
 
         this.movie = pair.first
 
@@ -43,33 +39,21 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             }
         }
         binding.likeBtn.setOnClickListener(
-            LikeClicker(
-                movie!!,
-                binding
-            )
+            if (pair.second)
+                View.OnClickListener {
+                    mainViewModel.deleteMovie(movie!!)
+                }
+            else
+                View.OnClickListener {
+                    mainViewModel.insertMovie(movie!!)
+                }
+
         )
 
         if (pair.second) {
             binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
         } else {
             binding.likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
-        }
-    }
-
-    class LikeClicker(val movie: Movie, private val binding: ListItemBinding) :
-        View.OnClickListener {
-        override fun onClick(v: View?) {
-            MainScope().launch(Dispatchers.IO) {
-                if (App.database.movieDAO().isLiked(movie.id)) {
-                    movie.let { it1 -> App.database.movieDAO().deleteMovie(it1) }
-                    Log.d(TAG, "onClick: delete done")
-                    binding.likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
-                } else {
-                    movie.let { it1 -> App.database.movieDAO().insertMovie(it1) }
-                    Log.d(TAG, "onClick: job done")
-                    binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
-                }
-            }
         }
     }
 

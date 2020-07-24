@@ -6,13 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
 import com.example.movieapp.model.Movie
+import com.example.movieapp.viewModel.MainViewModel
 
-class ListAdapter(private val context: Context) : RecyclerView.Adapter<MovieViewHolder>() {
+class ListAdapter(private val context: Context, val mainViewModel: MainViewModel) :
+    RecyclerView.Adapter<MovieViewHolder>() {
 
-    private var list: List<Pair<Movie,Boolean>> = listOf()
+    private var list: List<Pair<Movie, Boolean>> = listOf()
 
     // change data and notify the change to RecyclerView
-    fun changeData(list: List<Pair<Movie,Boolean>>) {
+    fun changeData(list: List<Pair<Movie, Boolean>>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -26,7 +28,7 @@ class ListAdapter(private val context: Context) : RecyclerView.Adapter<MovieView
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(list[position], mainViewModel)
     }
 
     override fun getItemCount(): Int = list.size

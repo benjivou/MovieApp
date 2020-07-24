@@ -7,6 +7,8 @@ import com.example.movieapp.App
 import com.example.movieapp.model.Movie
 import com.example.movieapp.model.TypeDisplay
 import com.example.movieapp.viewModel.internetacces.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -86,6 +88,17 @@ class MainViewModel : ViewModel() {
                     emptyList()
                 }
             }
+        }
+    }
+
+    fun insertMovie(movie: Movie) {
+        viewModelScope.launch(Dispatchers.IO) { App.database.movieDAO().insertMovie(movie)
+        }
+    }
+
+    fun deleteMovie(movie: Movie) {
+        viewModelScope.launch(Dispatchers.IO) {
+            App.database.movieDAO().deleteMovie(movie)
         }
     }
 }
