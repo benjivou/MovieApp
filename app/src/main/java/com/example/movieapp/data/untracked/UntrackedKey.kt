@@ -1,4 +1,4 @@
-package com.example.movieapp.viewModel.room
+package com.example.movieapp.data.untracked
 
 /**
  * Created by Benjamin Vouillon on 08,July,2020

@@ -1,12 +1,16 @@
-package com.example.movieapp.viewModel
+package com.example.movieapp.ui.viewmodel
 
 
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.movieapp.App
-import com.example.movieapp.model.Movie
-import com.example.movieapp.model.TypeDisplay
-import com.example.movieapp.viewModel.internetacces.*
+import com.example.movieapp.data.model.Movie
+import com.example.movieapp.data.model.TypeDisplay
+import com.example.movieapp.ui.livedata.LiveDataCallAdapterFactory
+import com.example.movieapp.data.entities.ApiEmptyResponse
+import com.example.movieapp.data.entities.ApiErrorResponse
+import com.example.movieapp.data.entities.ApiSuccessResponse
+import com.example.movieapp.data.entities.MoviesService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit

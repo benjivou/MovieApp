@@ -1,14 +1,14 @@
-package com.example.movieapp.view
+package com.example.movieapp.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
-import com.example.movieapp.model.Movie
-import com.example.movieapp.viewModel.MainViewModel
+import com.example.movieapp.data.model.Movie
+import com.example.movieapp.ui.viewmodel.MainViewModel
 
-class ListAdapter(private val context: Context, val mainViewModel: MainViewModel) :
+class ListAdapter(private val context: Context, private val mainViewModel: MainViewModel) :
     RecyclerView.Adapter<MovieViewHolder>() {
 
     private var list: List<Pair<Movie, Boolean>> = listOf()

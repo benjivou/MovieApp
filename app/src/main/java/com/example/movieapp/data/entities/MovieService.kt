@@ -1,8 +1,8 @@
-package com.example.movieapp.viewModel.internetacces
+package com.example.movieapp.data.entities
 
 import androidx.lifecycle.MutableLiveData
-import com.example.movieapp.viewModel.room.KEY_PRIVATE
-import com.example.movieapp.model.ResultPage
+import com.example.movieapp.data.untracked.KEY_PRIVATE
+import com.example.movieapp.data.model.ResultPage
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

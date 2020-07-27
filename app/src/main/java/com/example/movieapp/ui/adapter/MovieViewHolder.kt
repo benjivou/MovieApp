@@ -1,11 +1,11 @@
-package com.example.movieapp.view
+package com.example.movieapp.ui.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
+import com.example.movieapp.data.model.Movie
 import com.example.movieapp.databinding.ListItemBinding
-import com.example.movieapp.model.Movie
-import com.example.movieapp.viewModel.MainViewModel
+import com.example.movieapp.ui.viewmodel.MainViewModel
 import com.squareup.picasso.Picasso
 
 /**

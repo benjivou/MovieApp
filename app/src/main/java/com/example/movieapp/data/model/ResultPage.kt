@@ -1,6 +1,5 @@
-package com.example.movieapp.model
+package com.example.movieapp.data.model
 
-import com.example.movieapp.model.Movie
 import com.google.gson.annotations.SerializedName
 
 /**

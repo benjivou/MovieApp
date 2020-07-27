@@ -1,8 +1,8 @@
-package com.example.movieapp.viewModel.room
+package com.example.movieapp.data.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.movieapp.model.Movie
+import com.example.movieapp.data.model.Movie
 
 /**
  * Created by Benjamin Vouillon on 15,July,2020
