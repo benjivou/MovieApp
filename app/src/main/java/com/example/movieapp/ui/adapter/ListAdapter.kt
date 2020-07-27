@@ -8,7 +8,7 @@ import com.example.movieapp.R
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.ui.viewmodel.MainViewModel
 
-class ListAdapter(private val context: Context, private val mainViewModel: MainViewModel) :
+class ListAdapter(private val context: Context, private val itemLiked: MovieViewHolder.ItemLiked) :
     RecyclerView.Adapter<MovieViewHolder>() {
 
     private var list: List<Pair<Movie, Boolean>> = listOf()
@@ -28,7 +28,7 @@ class ListAdapter(private val context: Context, private val mainViewModel: MainV
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.bind(list[position], mainViewModel)
+        holder.bind(list[position], itemLiked)
     }
 
     override fun getItemCount(): Int = list.size

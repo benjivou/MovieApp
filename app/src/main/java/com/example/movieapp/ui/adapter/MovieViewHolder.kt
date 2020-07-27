@@ -19,7 +19,7 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private var movie: Movie? = null
 
 
-    fun bind(pair: Pair<Movie, Boolean>, mainViewModel: MainViewModel) {
+    fun bind(pair: Pair<Movie, Boolean>, itemLiked: ItemLiked) {
 
         this.movie = pair.first
 
@@ -38,16 +38,11 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                     .into(image)
             }
         }
-        binding.likeBtn.setOnClickListener(
-            if (pair.second)
-                View.OnClickListener {
-                    mainViewModel.deleteMovie(movie!!)
-                }
-            else
-                View.OnClickListener {
-                    mainViewModel.insertMovie(movie!!)
-                }
 
+        binding.likeBtn.setOnClickListener(
+            View.OnClickListener {
+                itemLiked?.onItemLiked(movie!!)
+            }
         )
 
         if (pair.second) {
@@ -57,5 +52,7 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
     }
 
-
+    public interface ItemLiked {
+        fun onItemLiked(movie: Movie)
+    }
 }

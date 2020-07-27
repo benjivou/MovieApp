@@ -11,6 +11,7 @@ import com.example.movieapp.data.entities.ApiEmptyResponse
 import com.example.movieapp.data.entities.ApiErrorResponse
 import com.example.movieapp.data.entities.ApiSuccessResponse
 import com.example.movieapp.data.entities.MoviesService
+import com.example.movieapp.ui.adapter.MovieViewHolder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -44,6 +45,17 @@ class MainViewModel : ViewModel() {
 
     // List of Movies ready to be displayed
     private var currentList = MediatorLiveData<List<Pair<Movie, Boolean>>>()
+
+    val itemLiked = object : MovieViewHolder.ItemLiked {
+        override fun onItemLiked(movie: Movie) {
+            if (likedList.value?.contains(movie) == true) {
+                deleteMovie(movie)
+            } else {
+                insertMovie(movie)
+            }
+        }
+
+    }
 
     init {
         currentList.addSource(likedList) { listMovies ->

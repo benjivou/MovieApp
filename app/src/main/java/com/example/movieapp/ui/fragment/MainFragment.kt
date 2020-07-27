@@ -33,7 +33,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         adapterList = ListAdapter(
             requireContext(),
-            viewModel
+            viewModel.itemLiked
         )
         // setup the RecyclerView
         listRecyclerView.apply {
