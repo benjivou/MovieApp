@@ -40,7 +40,7 @@ class MovieViewHolder(itemView: View, private val moviesViewHolderListener: Movi
 
         binding.likeBtn.setOnClickListener(
             View.OnClickListener {
-                moviesViewHolderListener?.onMoviesViewHolderListener(movie!!)
+                moviesViewHolderListener?.onItemLiked(movie!!)
             }
         )
 
@@ -52,6 +52,6 @@ class MovieViewHolder(itemView: View, private val moviesViewHolderListener: Movi
     }
 
     public interface MoviesViewHolderListener {
-        fun onMoviesViewHolderListener(movie: Movie)
+        fun onItemLiked(movie: Movie)
     }
 }
