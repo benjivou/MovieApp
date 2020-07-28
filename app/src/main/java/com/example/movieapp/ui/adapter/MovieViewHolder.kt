@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.databinding.ListItemBinding
-import com.example.movieapp.ui.viewmodel.MainViewModel
 import com.squareup.picasso.Picasso
 
 /**
@@ -14,12 +13,12 @@ import com.squareup.picasso.Picasso
 const val PURL = "https://image.tmdb.org/t/p/w185"
 private val TAG = "MovieViewHolder"
 
-class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class MovieViewHolder(itemView: View, private val moviesViewHolderListener: MoviesViewHolderListener) : RecyclerView.ViewHolder(itemView) {
     private val binding = ListItemBinding.bind(itemView)
     private var movie: Movie? = null
 
 
-    fun bind(pair: Pair<Movie, Boolean>, itemLiked: ItemLiked) {
+    fun bind(pair: Pair<Movie, Boolean>) {
 
         this.movie = pair.first
 
@@ -41,7 +40,7 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         binding.likeBtn.setOnClickListener(
             View.OnClickListener {
-                itemLiked?.onItemLiked(movie!!)
+                moviesViewHolderListener?.onMoviesViewHolderListener(movie!!)
             }
         )
 
@@ -52,7 +51,7 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
     }
 
-    public interface ItemLiked {
-        fun onItemLiked(movie: Movie)
+    public interface MoviesViewHolderListener {
+        fun onMoviesViewHolderListener(movie: Movie)
     }
 }

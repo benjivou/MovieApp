@@ -46,8 +46,8 @@ class MainViewModel : ViewModel() {
     // List of Movies ready to be displayed
     private var currentList = MediatorLiveData<List<Pair<Movie, Boolean>>>()
 
-    val itemLiked = object : MovieViewHolder.ItemLiked {
-        override fun onItemLiked(movie: Movie) {
+    val moviesViewHolderListener = object : MovieViewHolder.MoviesViewHolderListener {
+        override fun onMoviesViewHolderListener(movie: Movie) {
             if (likedList.value?.contains(movie) == true) {
                 deleteMovie(movie)
             } else {
