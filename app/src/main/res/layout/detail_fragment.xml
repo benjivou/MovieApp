@@ -11,7 +11,7 @@
         android:layout_width="53dp"
         android:layout_height="18dp"
         android:layout_marginTop="24dp"
-        android:text="TextView"
+        android:text="title"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,7 +20,7 @@
         android:id="@+id/overview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="overview"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintHorizontal_bias="0.487"
@@ -29,8 +29,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="164dp"
+        android:layout_height="294dp"
         android:layout_marginTop="28dp"
         app:layout_constraintBottom_toTopOf="@+id/overview"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,4 +38,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
         app:srcCompat="@drawable/ic_favorite_black_18dp" />
+
+    <TextView
+        android:id="@+id/userRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:text="@string/itemRate"
+        app:layout_constraintEnd_toEndOf="@+id/overview"
+        app:layout_constraintHorizontal_bias="0.416"
+        app:layout_constraintStart_toStartOf="@+id/overview"
+        app:layout_constraintTop_toTopOf="@+id/overview" />
+
+    <TextView
+        android:id="@+id/realesedate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="realese date"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/userRating"
+        app:layout_constraintStart_toStartOf="@+id/userRating"
+        app:layout_constraintTop_toBottomOf="@+id/userRating" />
 </androidx.constraintlayout.widget.ConstraintLayout>

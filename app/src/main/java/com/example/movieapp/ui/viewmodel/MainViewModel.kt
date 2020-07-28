@@ -2,7 +2,9 @@ package com.example.movieapp.ui.viewmodel
 
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.*
+import androidx.navigation.findNavController
 import com.example.movieapp.App
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.TypeDisplay
@@ -12,6 +14,7 @@ import com.example.movieapp.data.entities.ApiErrorResponse
 import com.example.movieapp.data.entities.ApiSuccessResponse
 import com.example.movieapp.data.entities.MoviesService
 import com.example.movieapp.ui.adapter.MovieViewHolder
+import com.example.movieapp.ui.fragment.MainFragmentDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -37,14 +40,16 @@ class MainViewModel : ViewModel() {
     private var movieList = Transformations.switchMap<TypeDisplay, List<Movie>>(
         this.typeDisplay
     ) {
-        when (typeDisplay.value ){
-            TypeDisplay.LIKED-> App.database.movieDAO().getAll()
+        when (typeDisplay.value) {
+            TypeDisplay.LIKED -> App.database.movieDAO().getAll()
             TypeDisplay.LIKED_POPULAR -> App.database.movieDAO().getAllByPopular()
             TypeDisplay.LIKED_RATED -> App.database.movieDAO().getAllByRated()
             else -> internetCall()
         }
 
     }
+
+    lateinit var currentMovie: Movie
 
     // List of Movies ready to be displayed
     private var currentList = MediatorLiveData<List<Pair<Movie, Boolean>>>()
@@ -56,6 +61,15 @@ class MainViewModel : ViewModel() {
             } else {
                 insertMovie(movie)
             }
+        }
+
+        override fun onDetailsRequested(
+            view: View,
+            movie: Movie
+        ) {
+            Log.d(TAG, "onDetailsRequested: image is clicked")
+            val action = MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id)
+            view.findNavController().navigate(action)
         }
     }
 
