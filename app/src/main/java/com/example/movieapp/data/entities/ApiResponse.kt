@@ -1,4 +1,4 @@
-package com.example.movieapp.viewModel.internetacces
+package com.example.movieapp.data.entities
 
 import retrofit2.Response
 

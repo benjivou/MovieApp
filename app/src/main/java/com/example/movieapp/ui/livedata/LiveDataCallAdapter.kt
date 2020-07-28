@@ -1,7 +1,9 @@
-package com.example.movieapp.viewModel.internetacces
+package com.example.movieapp.ui.livedata
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.movieapp.data.entities.ApiResponse
+import com.example.movieapp.data.entities.UNKNOWN_CODE
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback
@@ -36,11 +38,18 @@ class LiveDataCallAdapter<R>(private val responseType: Type): CallAdapter<R, Liv
                     override fun onFailure(call: Call<R>, t: Throwable) {
                         postValue(
                             ApiResponse.create(
-                                UNKNOWN_CODE, t))
+                                UNKNOWN_CODE,
+                                t
+                            )
+                        )
                     }
 
                     override fun onResponse(call: Call<R>, response: Response<R>) {
-                        postValue(ApiResponse.create(response))
+                        postValue(
+                            ApiResponse.create(
+                                response
+                            )
+                        )
                         isSuccess = true
                     }
                 })

@@ -1,6 +1,5 @@
-package com.example.movieapp.viewModel.internetacces
+package com.example.movieapp.ui.livedata
 
-import com.example.movieapp.viewModel.internetacces.LiveDataCallAdapter
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType

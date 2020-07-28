@@ -1,4 +1,4 @@
-package com.example.movieapp.model
+package com.example.movieapp.data.model
 
 import androidx.room.*
 import com.google.gson.Gson

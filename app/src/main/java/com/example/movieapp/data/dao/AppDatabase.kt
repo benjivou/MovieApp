@@ -1,12 +1,11 @@
-package com.example.movieapp.viewModel.room
+package com.example.movieapp.data.dao
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.movieapp.model.Converters
-import com.example.movieapp.model.Movie
+import com.example.movieapp.data.dao.MoviesDAO
+import com.example.movieapp.data.model.Converters
+import com.example.movieapp.data.model.Movie
 
 /**
  * Created by Benjamin Vouillon on 15,July,2020
