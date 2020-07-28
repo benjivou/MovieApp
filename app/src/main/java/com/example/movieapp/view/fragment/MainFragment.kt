@@ -55,14 +55,17 @@ class MainFragment : Fragment() {
      * the idea is to the current list display and get the new list
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        // ignore likes
+        if (item.itemId == R.id.displayMoviesLiked) return true
+
         // change the list in the modelView
         viewModel.getList(
             when (item.itemId) {
-                R.id.displayMoviesLiked -> TypeDisplay.LIKED
                 R.id.displayMoviesPopular -> TypeDisplay.POPULAR
                 R.id.displayMoviesMostRated -> TypeDisplay.RATED
-                R.id.displayMoviesLikedMostPopular-> TypeDisplay.LIKED_POPULAR
-                R.id.displayMoviesLikedMostRated-> TypeDisplay.LIKED_RATED
+                R.id.displayMoviesLikedMostPopular -> TypeDisplay.LIKED_POPULAR
+                R.id.displayMoviesLikedMostRated -> TypeDisplay.LIKED_RATED
                 else -> TypeDisplay.POPULAR
             }
         )

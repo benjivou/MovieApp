@@ -32,10 +32,13 @@ class MainViewModel : ViewModel() {
     private var movieList = Transformations.switchMap<TypeDisplay, List<Movie>>(
         this.typeDisplay
     ) {
-        if (typeDisplay.value == TypeDisplay.LIKED)
-            App.database.movieDAO().getAll()
-        else
-            internetCall()
+        when (typeDisplay.value ){
+            TypeDisplay.LIKED-> App.database.movieDAO().getAll()
+            TypeDisplay.LIKED_POPULAR -> App.database.movieDAO().getAllByPopular()
+            TypeDisplay.LIKED_RATED -> App.database.movieDAO().getAllByRated()
+            else -> internetCall()
+        }
+
     }
 
     // List of Movies ready to be displayed

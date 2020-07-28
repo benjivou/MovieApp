@@ -23,6 +23,12 @@ interface MoviesDAO {
     @Query("Select * From Movie")
     fun getAll(): LiveData<List<Movie>>
 
+    @Query("Select * From Movie Order by popularity DESC")
+    fun getAllByPopular(): LiveData<List<Movie>>
+
+    @Query("Select * From Movie Order by vote_average DESC")
+    fun getAllByRated(): LiveData<List<Movie>>
+
     @Query("Select Exists(Select * From Movie Where id = :id ) ")
     fun isLiked(id: Int): Boolean
 }
