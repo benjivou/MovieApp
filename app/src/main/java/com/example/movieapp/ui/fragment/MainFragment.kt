@@ -3,18 +3,22 @@ package com.example.movieapp.ui.fragment
 
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
 import com.example.movieapp.databinding.FragmentMainBinding
 import com.example.movieapp.data.model.TypeDisplay
 import com.example.movieapp.ui.adapter.ListAdapter
+import com.example.movieapp.ui.viewmodel.MainViewModel
 
 import kotlinx.android.synthetic.main.fragment_main.*
 
-class MainFragment : AbstractFragment() {
+class MainFragment : Fragment() {
 
     private lateinit var adapterList: ListAdapter
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
