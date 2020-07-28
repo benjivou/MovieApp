@@ -1,4 +1,4 @@
-package com.example.movieapp.crawler
+package com.example.movieapp.ui.livedata
 
 import retrofit2.CallAdapter
 import retrofit2.Retrofit
@@ -21,7 +21,7 @@ class LiveDataCallAdapterFactory : CallAdapter.Factory() {
             ) as? ParameterizedType
                 ?: throw IllegalArgumentException("resource must be parameterized")
         return LiveDataCallAdapter<Any>(
-            CallAdapter.Factory.getParameterUpperBound(
+            getParameterUpperBound(
                 0,
                 observableType
             )

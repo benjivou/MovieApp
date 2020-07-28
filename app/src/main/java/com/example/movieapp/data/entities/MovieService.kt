@@ -1,6 +1,8 @@
-package com.example.movieapp.crawler
+package com.example.movieapp.data.entities
 
 import androidx.lifecycle.MutableLiveData
+import com.example.movieapp.data.untracked.KEY_PRIVATE
+import com.example.movieapp.data.model.ResultPage
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

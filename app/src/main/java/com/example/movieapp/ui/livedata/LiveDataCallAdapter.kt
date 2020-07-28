@@ -1,13 +1,14 @@
-package com.example.movieapp.crawler
+package com.example.movieapp.ui.livedata
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.movieapp.data.entities.ApiResponse
+import com.example.movieapp.data.entities.UNKNOWN_CODE
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.reflect.Type
-import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Created by Benjamin Vouillon on 17,July,2020
@@ -35,11 +36,20 @@ class LiveDataCallAdapter<R>(private val responseType: Type): CallAdapter<R, Liv
             private fun enqueue() {
                 call.enqueue(object : Callback<R> {
                     override fun onFailure(call: Call<R>, t: Throwable) {
-                        postValue(ApiResponse.create(UNKNOWN_CODE, t))
+                        postValue(
+                            ApiResponse.create(
+                                UNKNOWN_CODE,
+                                t
+                            )
+                        )
                     }
 
                     override fun onResponse(call: Call<R>, response: Response<R>) {
-                        postValue(ApiResponse.create(response))
+                        postValue(
+                            ApiResponse.create(
+                                response
+                            )
+                        )
                         isSuccess = true
                     }
                 })
