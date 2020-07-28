@@ -54,7 +54,6 @@ class MainViewModel : ViewModel() {
                 insertMovie(movie)
             }
         }
-
     }
 
     init {
