@@ -68,7 +68,7 @@ class MainViewModel : ViewModel() {
             movie: Movie
         ) {
             Log.d(TAG, "onDetailsRequested: image is clicked")
-            val action = MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id)
+            val action = MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id.toString())
             view.findNavController().navigate(action)
         }
     }

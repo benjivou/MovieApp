@@ -1,6 +1,7 @@
 package com.example.movieapp.data.entities
 
 import androidx.lifecycle.MutableLiveData
+import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.untracked.KEY_PRIVATE
 import com.example.movieapp.data.model.ResultPage
 import retrofit2.http.GET
@@ -18,5 +19,11 @@ interface MoviesService {
         @Path("type") type: String,
         @Query("api_key") s: String = KEY_PRIVATE
     ): MutableLiveData<ApiResponse<ResultPage>>
+
+    @GET("{idMovie}")
+    fun movieById(
+        @Path("idMovie") idMovie: String,
+        @Query("api_key") s: String = KEY_PRIVATE
+    ): MutableLiveData<ApiResponse<Movie>>
 }
 
