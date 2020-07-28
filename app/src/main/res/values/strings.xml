@@ -13,4 +13,6 @@
     <string name="popularMovies">Popular movies</string>
     <string name="mostRatedMovies">Most rated movies</string>
     <string name="like_button">like Button</string>
+    <string name="likedSortByRated">sort by rated</string>
+    <string name="sortByPopular">sort by popular</string>
 </resources>

@@ -6,7 +6,8 @@
 
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.example.movieapp.view.fragment.MainFragment"
+
+        android:name="com.example.movieapp.ui.fragment.MainFragment"
         android:label="MainFragment">
         <action
             android:id="@+id/action_mainFragment_to_detailFragment"
@@ -14,10 +15,11 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.example.movieapp.view.fragment.DetailFragment"
+        android:name="com.example.movieapp.ui.fragment.DetailFragment"
         android:label="DetailFragment">
         <argument
             android:name="product_id"
             app:argType="integer" />
     </fragment>
+
 </navigation>

@@ -1,8 +1,9 @@
-package com.example.movieapp.likesmanager
+package com.example.movieapp.data.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.movieapp.model.Movie
+import com.example.movieapp.data.model.Movie
+
 
 /**
  * Created by Benjamin Vouillon on 15,July,2020
@@ -22,6 +23,12 @@ interface MoviesDAO {
 
     @Query("Select * From Movie")
     fun getAll(): LiveData<List<Movie>>
+
+    @Query("Select * From Movie Order by popularity DESC")
+    fun getAllByPopular(): LiveData<List<Movie>>
+
+    @Query("Select * From Movie Order by vote_average DESC")
+    fun getAllByRated(): LiveData<List<Movie>>
 
     @Query("Select Exists(Select * From Movie Where id = :id ) ")
     fun isLiked(id: Int): Boolean

@@ -1,4 +1,4 @@
-package com.example.movieapp.crawler
+package com.example.movieapp.data.model
 
 /**
  * Created by Benjamin Vouillon on 17,July,2020
@@ -10,5 +10,7 @@ package com.example.movieapp.crawler
 enum class TypeDisplay(val s: String) {
     POPULAR("popular"),
     RATED("top_rated"),
-    LIKED("liked")
+    LIKED("liked"),
+    LIKED_POPULAR("liked_popular"),
+    LIKED_RATED("liked_rated")
 }

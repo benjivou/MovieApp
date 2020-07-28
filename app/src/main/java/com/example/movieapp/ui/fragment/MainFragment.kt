@@ -1,13 +1,15 @@
-package com.example.movieapp.view.fragment
+package com.example.movieapp.ui.fragment
+
 
 import android.os.Bundle
 import android.view.*
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.crawler.TypeDisplay
 import com.example.movieapp.databinding.FragmentMainBinding
-import com.example.movieapp.view.fragment.holder.ListAdapter
+import com.example.movieapp.data.model.TypeDisplay
+import com.example.movieapp.ui.adapter.ListAdapter
+
 import kotlinx.android.synthetic.main.fragment_main.*
 
 class MainFragment : AbstractFragment() {
@@ -28,8 +30,11 @@ class MainFragment : AbstractFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapterList =
-            ListAdapter(requireContext())
+
+        adapterList = ListAdapter(
+            requireContext(),
+            viewModel.moviesViewHolderListener
+        )
         // setup the RecyclerView
         listRecyclerView.apply {
 
@@ -53,12 +58,17 @@ class MainFragment : AbstractFragment() {
      * the idea is to the current list display and get the new list
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        // ignore likes
+        if (item.itemId == R.id.displayMoviesLiked) return true
+
         // change the list in the modelView
         viewModel.getList(
             when (item.itemId) {
-                R.id.displayMoviesLiked -> TypeDisplay.LIKED
                 R.id.displayMoviesPopular -> TypeDisplay.POPULAR
                 R.id.displayMoviesMostRated -> TypeDisplay.RATED
+                R.id.displayMoviesLikedMostPopular -> TypeDisplay.LIKED_POPULAR
+                R.id.displayMoviesLikedMostRated -> TypeDisplay.LIKED_RATED
                 else -> TypeDisplay.POPULAR
             }
         )
