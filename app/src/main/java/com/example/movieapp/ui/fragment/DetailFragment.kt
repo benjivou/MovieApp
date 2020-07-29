@@ -47,6 +47,5 @@ class DetailFragment : Fragment() {
             userRating.text = resources.getString(R.string.itemRate, it.voteAverage.toString())
             realesedate.text = it.releaseDate
         })
-
     }
 }
