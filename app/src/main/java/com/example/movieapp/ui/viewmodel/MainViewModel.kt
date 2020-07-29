@@ -27,8 +27,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 const val URL = "https://api.themoviedb.org/3/movie/"
 private const val TAG = "MainViewModel"
 
-class MainViewModel : ViewModel() {
+class MainViewModel : AbstractViewModel() {
 
+    private val likedList = App.database.movieDAO().getAll()
     /**
      * Type of the list displayed
      */
@@ -36,7 +37,7 @@ class MainViewModel : ViewModel() {
         MutableLiveData(TypeDisplay.POPULAR)
 
     // List of raw Movies
-    private var likedList = App.database.movieDAO().getAll()
+
     private var movieList = Transformations.switchMap<TypeDisplay, List<Movie>>(
         this.typeDisplay
     ) {
@@ -49,18 +50,12 @@ class MainViewModel : ViewModel() {
 
     }
 
-    lateinit var currentMovie: Movie
-
     // List of Movies ready to be displayed
     private var currentList = MediatorLiveData<List<Pair<Movie, Boolean>>>()
 
     val moviesViewHolderListener = object : MovieViewHolder.MoviesViewHolderListener {
         override fun onItemLiked(movie: Movie) {
-            if (likedList.value?.contains(movie) == true) {
-                deleteMovie(movie)
-            } else {
-                insertMovie(movie)
-            }
+            doOnLikePress(movie)
         }
 
         override fun onDetailsRequested(
@@ -68,7 +63,8 @@ class MainViewModel : ViewModel() {
             movie: Movie
         ) {
             Log.d(TAG, "onDetailsRequested: image is clicked")
-            val action = MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id.toString())
+            val action =
+                MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id.toString())
             view.findNavController().navigate(action)
         }
     }
@@ -101,13 +97,6 @@ class MainViewModel : ViewModel() {
     }
 
     private fun internetCall(): LiveData<List<Movie>> {
-        // prepare the internet call
-        val service = Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(LiveDataCallAdapterFactory())
-            .build()
-            .create(MoviesService::class.java)
 
         return Transformations.map(service.listOfMovies(typeDisplay.value!!.s)) {
             when (it) {
@@ -121,15 +110,11 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun insertMovie(movie: Movie) {
-        viewModelScope.launch(Dispatchers.IO) {
-            App.database.movieDAO().insertMovie(movie)
-        }
-    }
-
-    fun deleteMovie(movie: Movie) {
-        viewModelScope.launch(Dispatchers.IO) {
-            App.database.movieDAO().deleteMovie(movie)
+    override fun doOnLikePress(movie: Movie) {
+        if (likedList.value?.contains(movie) == true) {
+            deleteMovie(movie)
+        } else {
+            insertMovie(movie)
         }
     }
 }

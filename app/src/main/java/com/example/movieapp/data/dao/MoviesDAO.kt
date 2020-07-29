@@ -31,5 +31,5 @@ interface MoviesDAO {
     fun getAllByRated(): LiveData<List<Movie>>
 
     @Query("Select Exists(Select * From Movie Where id = :id ) ")
-    fun isLiked(id: Int): Boolean
+    fun isLiked(id: Int): LiveData<Boolean>
 }
