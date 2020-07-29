@@ -104,7 +104,7 @@ lint/reports/
 # Secrets
 app/src/main/res/values/secrets.xml
 app/src/app/res/values/secrets.xml
-app/src/main/java/com/example/movieapp/data/untracked/
+app/src/main/java/com/example/movieapp/data/untracked/UntrackedKey.kt
 # Phrase
 
 .phrase.yml
