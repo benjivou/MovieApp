@@ -21,9 +21,29 @@ private const val TAG = "DetailViewModel"
 class DetailViewModel : ViewModel() {
 
     private var currentId: MutableLiveData<Int?> = MutableLiveData()
-    private var currentMoviePair = MediatorLiveData<Pair<Movie?, Boolean>>()
+    private var _currentMoviePair = MediatorLiveData<Pair<Movie?, Boolean>>()
     private var movieCurrent: LiveData<Movie?> = Transformations.switchMap(currentId) {
         it?.let { internetCall(it.toString()) } ?: null
+    }
+    private var isLikedMovie: LiveData<Boolean> =
+        Transformations.switchMap(currentId) {
+            Log.i(TAG, "getMovieAndIsLiked: $it")
+            it?.let { it1 -> App.database.movieDAO().isLiked(it1) }
+                ?: MutableLiveData()
+        }
+
+    val currentMoviePair: LiveData<Pair<Movie?, Boolean>>
+        get() = _currentMoviePair
+
+    init {
+        _currentMoviePair.addSource(movieCurrent) {
+            _currentMoviePair.value = Pair(it, isLikedMovie?.value ?: false)
+        }
+        _currentMoviePair.addSource(isLikedMovie) { isLiked ->
+            Log.i(TAG, "isLiked : modif de la list de movie ")
+            _currentMoviePair.value =
+                Pair(movieCurrent.value, isLiked)
+        }
     }
 
     private val service: MoviesService = Retrofit.Builder()
@@ -33,28 +53,9 @@ class DetailViewModel : ViewModel() {
         .build()
         .create(MoviesService::class.java)
 
-    private var isLikedMovie: LiveData<Boolean> =
-        Transformations.switchMap(currentId) {
-            Log.i(TAG, "getMovieAndIsLiked: $it")
-            it?.let { it1 -> App.database.movieDAO().isLiked(it1) }
-                ?: MutableLiveData()
-        }
 
-    init {
-
-    }
-
-    fun getMovieAndIsLiked(idMovie: Int): LiveData<Pair<Movie?, Boolean>> {
+    fun getMovieAndIsLiked(idMovie: Int) {
         currentId.value = idMovie
-        currentMoviePair.addSource(movieCurrent) {
-            currentMoviePair.value = Pair(it, isLikedMovie?.value ?: false)
-        }
-        currentMoviePair.addSource(isLikedMovie) { isLiked ->
-            Log.i(TAG, "isLiked : modif de la list de movie ")
-            currentMoviePair.value =
-                Pair(movieCurrent.value, isLiked)
-        }
-        return currentMoviePair
     }
 
     private fun internetCall(idMovie: String): LiveData<Movie> {
@@ -76,7 +77,7 @@ class DetailViewModel : ViewModel() {
         }
     }
 
-    fun likeOrUnlikeMovie(movie: Movie) {
+    private fun likeOrUnlikeMovie(movie: Movie) {
         Log.i(com.example.movieapp.ui.viewmodel.TAG, "doOnLikePress: click button pressed")
         if (isLikedMovie.value == true) {
             Log.i(

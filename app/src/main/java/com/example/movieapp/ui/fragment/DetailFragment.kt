@@ -38,7 +38,8 @@ class DetailFragment : Fragment() {
         val idMovie = args.StringAttributIdUser
 
         viewModel.getMovieAndIsLiked(idMovie)
-            .observe(viewLifecycleOwner, Observer { (first, second) ->
+
+         viewModel.currentMoviePair.observe(viewLifecycleOwner, Observer { (first, second) ->
                 binding.apply {
                     first?.let {
                         title.text = it.title
