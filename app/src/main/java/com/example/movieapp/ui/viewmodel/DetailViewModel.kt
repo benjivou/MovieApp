@@ -3,10 +3,10 @@ package com.example.movieapp.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.movieapp.App
-import com.example.movieapp.data.entities.ApiEmptyResponse
-import com.example.movieapp.data.entities.ApiErrorResponse
-import com.example.movieapp.data.entities.ApiSuccessResponse
-import com.example.movieapp.data.entities.MoviesService
+import com.example.movieapp.data.entities.internet.ApiEmptyResponse
+import com.example.movieapp.data.entities.internet.ApiErrorResponse
+import com.example.movieapp.data.entities.internet.ApiSuccessResponse
+import com.example.movieapp.data.entities.internet.MoviesService
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.ui.livedata.LiveDataCallAdapterFactory
 import kotlinx.coroutines.Dispatchers
@@ -17,10 +17,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 private const val TAG = "DetailViewModel"
 
 // TODO afficher le movie n'a pas pu être trouver
-// TODO le current id ne doit pas être null
 class DetailViewModel : ViewModel() {
 
-    private var currentId: MutableLiveData<Int?> = MutableLiveData()
+    private var currentId: MutableLiveData<Int> = MutableLiveData()
     private var _currentMoviePair = MediatorLiveData<Pair<Movie?, Boolean>>()
     private var movieCurrent: LiveData<Movie?> = Transformations.switchMap(currentId) {
         it?.let { internetCall(it.toString()) } ?: null
@@ -28,8 +27,7 @@ class DetailViewModel : ViewModel() {
     private var isLikedMovie: LiveData<Boolean> =
         Transformations.switchMap(currentId) {
             Log.i(TAG, "getMovieAndIsLiked: $it")
-            it?.let { it1 -> App.database.movieDAO().isLiked(it1) }
-                ?: MutableLiveData()
+            App.database.movieDAO().isLiked(it)
         }
 
     val currentMoviePair: LiveData<Pair<Movie?, Boolean>>
@@ -37,7 +35,7 @@ class DetailViewModel : ViewModel() {
 
     init {
         _currentMoviePair.addSource(movieCurrent) {
-            _currentMoviePair.value = Pair(it, isLikedMovie?.value ?: false)
+            _currentMoviePair.value = Pair(it, isLikedMovie.value!!)
         }
         _currentMoviePair.addSource(isLikedMovie) { isLiked ->
             Log.i(TAG, "isLiked : modif de la list de movie ")

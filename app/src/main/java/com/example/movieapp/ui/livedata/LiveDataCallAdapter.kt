@@ -2,8 +2,8 @@ package com.example.movieapp.ui.livedata
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.movieapp.data.entities.ApiResponse
-import com.example.movieapp.data.entities.UNKNOWN_CODE
+import com.example.movieapp.data.entities.internet.ApiResponse
+import com.example.movieapp.data.entities.internet.UNKNOWN_CODE
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback

@@ -4,10 +4,10 @@ package com.example.movieapp.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.movieapp.App
-import com.example.movieapp.data.entities.ApiEmptyResponse
-import com.example.movieapp.data.entities.ApiErrorResponse
-import com.example.movieapp.data.entities.ApiSuccessResponse
-import com.example.movieapp.data.entities.MoviesService
+import com.example.movieapp.data.entities.internet.ApiEmptyResponse
+import com.example.movieapp.data.entities.internet.ApiErrorResponse
+import com.example.movieapp.data.entities.internet.ApiSuccessResponse
+import com.example.movieapp.data.entities.internet.MoviesService
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.TypeDisplay
 import com.example.movieapp.ui.livedata.LiveDataCallAdapterFactory
