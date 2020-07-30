@@ -39,28 +39,28 @@ class DetailFragment : Fragment() {
 
         viewModel.getMovieAndIsLiked(idMovie)
 
-         viewModel.currentMoviePair.observe(viewLifecycleOwner, Observer { (first, second) ->
-                binding.apply {
-                    first?.let {
-                        title.text = it.title
-                        overview.text = it.overview
-                        Picasso.get().load(PURL + it.posterPath).into(image)
-                        userRating.text =
-                            resources.getString(R.string.itemRate, it.voteAverage.toString())
-                        realeseDate.text = it.releaseDate
+        viewModel.currentMoviePair.observe(viewLifecycleOwner, Observer { (first, second) ->
+            binding.apply {
+                first?.let {
+                    title.text = it.title
+                    overview.text = it.overview
+                    Picasso.get().load(PURL + it.posterPath).into(image)
+                    userRating.text =
+                        resources.getString(R.string.itemRate, it.voteAverage.toString())
+                    realeseDate.text = it.releaseDate
 
-                        if (second) {
-                            likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
-                        } else {
-                            likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
-                        }
+                    if (second) {
+                        likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
+                    } else {
+                        likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
+                    }
 
-                        likeBtn.setOnClickListener {
-                            onLikeButtonClicked()
-                        }
+                    likeBtn.setOnClickListener {
+                        onLikeButtonClicked()
                     }
                 }
-            })
+            }
+        })
     }
 
     private fun onLikeButtonClicked() {

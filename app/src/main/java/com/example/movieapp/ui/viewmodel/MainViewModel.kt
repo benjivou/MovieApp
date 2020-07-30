@@ -27,7 +27,7 @@ class MainViewModel : ViewModel() {
 
     private val likedList = App.database.movieDAO().getAll()
 
-    val service: MoviesService = Retrofit.Builder()
+    private val service: MoviesService = Retrofit.Builder()
         .baseUrl(URL)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(LiveDataCallAdapterFactory())
