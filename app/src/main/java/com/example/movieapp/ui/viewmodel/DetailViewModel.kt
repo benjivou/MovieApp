@@ -10,25 +10,31 @@ import com.example.movieapp.data.entities.ApiEmptyResponse
 import com.example.movieapp.data.entities.ApiErrorResponse
 import com.example.movieapp.data.entities.ApiSuccessResponse
 import com.example.movieapp.data.model.Movie
-import com.example.movieapp.ui.fragment.DetailFragment
 
 private const val TAG = "DetailViewModel"
 
-class DetailViewModel : AbstractViewModel(), DetailFragment.DetailFragmentListener {
+// TODO afficher le movie n'a pas pu être trouver
+// TODO le current id ne doit pas être null
+class DetailViewModel : AbstractViewModel() {
 
-    private var currentId: MutableLiveData<String?> = MutableLiveData()
+    private var currentId: MutableLiveData<Int?> = MutableLiveData()
     private var currentMoviePair = MediatorLiveData<Pair<Movie?, Boolean>>()
-    private var movieCurrent = Transformations.switchMap(currentId) {
-        it?.let { internetCall(it) } ?: null
+    private var movieCurrent: LiveData<Movie?> = Transformations.switchMap(currentId) {
+        it?.let { internetCall(it.toString()) } ?: null
     }
     private var isLikedMovie: LiveData<Boolean> =
         Transformations.switchMap(currentId) {
-            Log.i(TAG, "getMovieAndIsLiked: ${it}")
-            it?.toInt()?.let { it1 -> App.database.movieDAO().isLiked(it1) }
+            Log.i(TAG, "getMovieAndIsLiked: $it")
+            it?.let { it1 -> App.database.movieDAO().isLiked(it1) }
                 ?: MutableLiveData()
         }
 
     init {
+
+    }
+
+    fun getMovieAndIsLiked(idMovie: Int): LiveData<Pair<Movie?, Boolean>> {
+        currentId.value = idMovie
         currentMoviePair.addSource(movieCurrent) {
             currentMoviePair.value = Pair(it, isLikedMovie?.value ?: false)
         }
@@ -37,11 +43,7 @@ class DetailViewModel : AbstractViewModel(), DetailFragment.DetailFragmentListen
             currentMoviePair.value =
                 Pair(movieCurrent.value, isLiked)
         }
-    }
-
-    fun getMovieAndIsLiked(idMovie: String): LiveData<Pair<Movie, Boolean>> {
-        currentId.value = idMovie
-        return currentMoviePair as LiveData<Pair<Movie, Boolean>>
+        return currentMoviePair
     }
 
     private fun internetCall(idMovie: String): LiveData<Movie> {
@@ -57,18 +59,25 @@ class DetailViewModel : AbstractViewModel(), DetailFragment.DetailFragmentListen
         }
     }
 
-    override fun onLikeButtonClicked() {
-        Log.i(TAG, "onLikeButtonClicked: the content of the movie is :${movieCurrent.value} ")
-        movieCurrent.value?.let { doOnLikePress(it) }
+    fun likeOrUnlikeMovieExposed() {
+        movieCurrent?.let {
+            likeOrUnlikeMovie(it.value!!)
+        }
     }
 
-    override fun doOnLikePress(movie: Movie) {
-        Log.i(TAG, "doOnLikePress: click button pressed")
+    override fun likeOrUnlikeMovie(movie: Movie) {
+        Log.i(com.example.movieapp.ui.viewmodel.TAG, "doOnLikePress: click button pressed")
         if (isLikedMovie.value == true) {
-            Log.i(TAG, "doOnLikePress: onLikeButtonClicked: delete ")
+            Log.i(
+                com.example.movieapp.ui.viewmodel.TAG,
+                "doOnLikePress: onLikeButtonClicked: delete "
+            )
             deleteMovie(movie)
         } else {
-            Log.i(TAG, "doOnLikePress: onLikeButtonClicked: insert ")
+            Log.i(
+                com.example.movieapp.ui.viewmodel.TAG,
+                "doOnLikePress: onLikeButtonClicked: insert "
+            )
             insertMovie(movie)
         }
     }

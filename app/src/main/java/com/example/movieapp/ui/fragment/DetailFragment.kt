@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.example.movieapp.R
@@ -22,7 +22,7 @@ private const val TAG = "DetailFragment"
 
 class DetailFragment : Fragment() {
 
-    private val viewModel: DetailViewModel by activityViewModels()
+    private val viewModel: DetailViewModel by viewModels()
     private val args: DetailFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -55,14 +55,16 @@ class DetailFragment : Fragment() {
                         }
 
                         likeBtn.setOnClickListener {
-                            viewModel.onLikeButtonClicked()
+                            onLikeButtonClicked()
                         }
                     }
                 }
             })
     }
 
-    interface DetailFragmentListener {
-        fun onLikeButtonClicked()
+    private fun onLikeButtonClicked() {
+        viewModel.likeOrUnlikeMovieExposed()
     }
 }
+
+

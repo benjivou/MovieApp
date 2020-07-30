@@ -2,23 +2,16 @@ package com.example.movieapp.ui.viewmodel
 
 
 import android.util.Log
-import android.view.View
-import androidx.lifecycle.*
-import androidx.navigation.findNavController
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.example.movieapp.App
-import com.example.movieapp.data.model.Movie
-import com.example.movieapp.data.model.TypeDisplay
-import com.example.movieapp.ui.livedata.LiveDataCallAdapterFactory
 import com.example.movieapp.data.entities.ApiEmptyResponse
 import com.example.movieapp.data.entities.ApiErrorResponse
 import com.example.movieapp.data.entities.ApiSuccessResponse
-import com.example.movieapp.data.entities.MoviesService
-import com.example.movieapp.ui.adapter.MovieViewHolder
-import com.example.movieapp.ui.fragment.MainFragmentDirections
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.movieapp.data.model.Movie
+import com.example.movieapp.data.model.TypeDisplay
 
 /**
  * Created by Benjamin Vouillon on 08,July,2020
@@ -30,6 +23,7 @@ private const val TAG = "MainViewModel"
 class MainViewModel : AbstractViewModel() {
 
     private val likedList = App.database.movieDAO().getAll()
+
     /**
      * Type of the list displayed
      */
@@ -53,22 +47,6 @@ class MainViewModel : AbstractViewModel() {
     // List of Movies ready to be displayed
     private var currentList = MediatorLiveData<List<Pair<Movie, Boolean>>>()
 
-    val moviesViewHolderListener = object : MovieViewHolder.MoviesViewHolderListener {
-        override fun onItemLiked(movie: Movie) {
-            doOnLikePress(movie)
-        }
-
-        override fun onDetailsRequested(
-            view: View,
-            movie: Movie
-        ) {
-            Log.d(TAG, "onDetailsRequested: image is clicked")
-            val action =
-                MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id.toString())
-            view.findNavController().navigate(action)
-        }
-    }
-
     init {
         currentList.addSource(likedList) { listMovies ->
             val buffer: MutableList<Pair<Movie, Boolean>> = mutableListOf()
@@ -81,7 +59,7 @@ class MainViewModel : AbstractViewModel() {
         currentList.addSource(movieList) { listMovies ->
             val buffer: MutableList<Pair<Movie, Boolean>> = mutableListOf()
             listMovies.forEach { movie ->
-                buffer.add(Pair(movie, likedList.value?.contains(movie) ?: false))
+                buffer.add(Pair(movie, likedList.value?.contains(movie) == true))
             }
             currentList.value = buffer
         }
@@ -110,7 +88,7 @@ class MainViewModel : AbstractViewModel() {
         }
     }
 
-    override fun doOnLikePress(movie: Movie) {
+    override fun likeOrUnlikeMovie(movie: Movie) {
         if (likedList.value?.contains(movie) == true) {
             deleteMovie(movie)
         } else {

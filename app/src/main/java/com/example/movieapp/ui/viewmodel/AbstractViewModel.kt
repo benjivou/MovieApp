@@ -11,9 +11,10 @@ import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+// TODO remplacer par un object favoriHandler pour éviter de
 abstract class AbstractViewModel : ViewModel() {
 
-    abstract fun doOnLikePress(movie: Movie)
+    abstract fun likeOrUnlikeMovie(movie: Movie)
 
     // prepare the internet call
     protected val service: MoviesService = Retrofit.Builder()
@@ -34,6 +35,4 @@ abstract class AbstractViewModel : ViewModel() {
             App.database.movieDAO().deleteMovie(movie)
         }
     }
-
-
 }
