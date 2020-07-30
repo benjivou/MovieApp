@@ -19,7 +19,7 @@
         android:label="DetailFragment">
         <argument
             android:name="@string/attributIdUser"
-            app:argType="string" />
+            app:argType="integer" />
     </fragment>
 
 </navigation>

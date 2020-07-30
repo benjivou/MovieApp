@@ -2,16 +2,19 @@ package com.example.movieapp.ui.viewmodel
 
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import com.example.movieapp.App
 import com.example.movieapp.data.entities.ApiEmptyResponse
 import com.example.movieapp.data.entities.ApiErrorResponse
 import com.example.movieapp.data.entities.ApiSuccessResponse
+import com.example.movieapp.data.entities.MoviesService
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.TypeDisplay
+import com.example.movieapp.ui.livedata.LiveDataCallAdapterFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * Created by Benjamin Vouillon on 08,July,2020
@@ -20,9 +23,16 @@ import com.example.movieapp.data.model.TypeDisplay
 const val URL = "https://api.themoviedb.org/3/movie/"
 private const val TAG = "MainViewModel"
 
-class MainViewModel : AbstractViewModel() {
+class MainViewModel : ViewModel() {
 
     private val likedList = App.database.movieDAO().getAll()
+
+    val service: MoviesService = Retrofit.Builder()
+        .baseUrl(URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(LiveDataCallAdapterFactory())
+        .build()
+        .create(MoviesService::class.java)
 
     /**
      * Type of the list displayed
@@ -88,11 +98,23 @@ class MainViewModel : AbstractViewModel() {
         }
     }
 
-    override fun likeOrUnlikeMovie(movie: Movie) {
+    fun likeOrUnlikeMovie(movie: Movie) {
         if (likedList.value?.contains(movie) == true) {
             deleteMovie(movie)
         } else {
             insertMovie(movie)
+        }
+    }
+
+    private fun insertMovie(movie: Movie) {
+        viewModelScope.launch(Dispatchers.IO) {
+            App.database.movieDAO().insertMovie(movie)
+        }
+    }
+
+    private fun deleteMovie(movie: Movie) {
+        viewModelScope.launch(Dispatchers.IO) {
+            App.database.movieDAO().deleteMovie(movie)
         }
     }
 }

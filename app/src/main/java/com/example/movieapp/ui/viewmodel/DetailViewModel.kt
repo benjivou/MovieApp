@@ -1,27 +1,38 @@
 package com.example.movieapp.ui.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import com.example.movieapp.App
 import com.example.movieapp.data.entities.ApiEmptyResponse
 import com.example.movieapp.data.entities.ApiErrorResponse
 import com.example.movieapp.data.entities.ApiSuccessResponse
+import com.example.movieapp.data.entities.MoviesService
 import com.example.movieapp.data.model.Movie
+import com.example.movieapp.ui.livedata.LiveDataCallAdapterFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 private const val TAG = "DetailViewModel"
 
 // TODO afficher le movie n'a pas pu être trouver
 // TODO le current id ne doit pas être null
-class DetailViewModel : AbstractViewModel() {
+class DetailViewModel : ViewModel() {
 
     private var currentId: MutableLiveData<Int?> = MutableLiveData()
     private var currentMoviePair = MediatorLiveData<Pair<Movie?, Boolean>>()
     private var movieCurrent: LiveData<Movie?> = Transformations.switchMap(currentId) {
         it?.let { internetCall(it.toString()) } ?: null
     }
+
+    private val service: MoviesService = Retrofit.Builder()
+        .baseUrl(URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(LiveDataCallAdapterFactory())
+        .build()
+        .create(MoviesService::class.java)
+
     private var isLikedMovie: LiveData<Boolean> =
         Transformations.switchMap(currentId) {
             Log.i(TAG, "getMovieAndIsLiked: $it")
@@ -65,7 +76,7 @@ class DetailViewModel : AbstractViewModel() {
         }
     }
 
-    override fun likeOrUnlikeMovie(movie: Movie) {
+    fun likeOrUnlikeMovie(movie: Movie) {
         Log.i(com.example.movieapp.ui.viewmodel.TAG, "doOnLikePress: click button pressed")
         if (isLikedMovie.value == true) {
             Log.i(
@@ -79,6 +90,18 @@ class DetailViewModel : AbstractViewModel() {
                 "doOnLikePress: onLikeButtonClicked: insert "
             )
             insertMovie(movie)
+        }
+    }
+
+    private fun insertMovie(movie: Movie) {
+        viewModelScope.launch(Dispatchers.IO) {
+            App.database.movieDAO().insertMovie(movie)
+        }
+    }
+
+    private fun deleteMovie(movie: Movie) {
+        viewModelScope.launch(Dispatchers.IO) {
+            App.database.movieDAO().deleteMovie(movie)
         }
     }
 }
