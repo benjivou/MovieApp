@@ -63,7 +63,7 @@
         android:id="@+id/likeBtn"
         android:layout_width="43dp"
         android:layout_height="53dp"
-        android:contentDescription="@string/like_button"
+        android:contentDescription="@string/likeButton"
         android:src="@drawable/ic_favorite_border_black_18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

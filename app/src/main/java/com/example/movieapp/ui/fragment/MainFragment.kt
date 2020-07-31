@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
+import com.example.movieapp.data.entities.displayabledata.EmptyMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.ErrorMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.MoviePrepared
 import com.example.movieapp.data.entities.displayabledata.SuccessMoviePrepared
@@ -60,10 +61,26 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
             .currentList
             .observe(viewLifecycleOwner, Observer { movies: List<MoviePrepared<Movie>> ->
                 when (movies[0]) {
-                    is SuccessMoviePrepared<Movie> -> adapterList.changeData(movies as List<SuccessMoviePrepared<Movie>>)
 
+                    is SuccessMoviePrepared<Movie> -> {
+                        adapterList.changeData(movies as List<SuccessMoviePrepared<Movie>>)
+                        errorText.visibility = View.GONE
+                        titleList.visibility = View.VISIBLE
+                        listRecyclerView.visibility = View.VISIBLE
+                    }
+
+                    is ErrorMoviePrepared<Movie> ->
+                        displayError(
+                            requireContext().getString(
+                                R.string.errorInternetServeError,
+                                (movies[0] as ErrorMoviePrepared<Movie>).errorCode,
+                                (movies[0] as ErrorMoviePrepared<Movie>).errorMessage
+                            )
+                        )
+
+                    is EmptyMoviePrepared<Movie> ->
+                        displayError(requireContext().getString(R.string.errorInternetVoidAnswer))
                 }
-
             })
 
         loadPage(TypeDisplay.LIKED)
@@ -98,7 +115,15 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
         viewModel.getList(
             typeDisplay
         )
-        titleList.text = typeDisplay.s
+        titleList.text = getString(
+            when (typeDisplay) {
+                TypeDisplay.POPULAR -> R.string.popularListTitle
+                TypeDisplay.RATED -> R.string.ratedListTitle
+                TypeDisplay.LIKED -> R.string.likedListTitle
+                TypeDisplay.LIKED_POPULAR -> R.string.likedPopularListTitle
+                TypeDisplay.LIKED_RATED -> R.string.likedRatedListTitle
+            }
+        )
     }
 
     override fun onItemLiked(movie: Movie) {
@@ -115,6 +140,12 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
         view.findNavController().navigate(action)
     }
 
+    private fun displayError(message: String) {
+        errorText.text = message
+        errorText.visibility = View.VISIBLE
+        titleList.visibility = View.INVISIBLE
+        listRecyclerView.visibility = View.INVISIBLE
+    }
 
 }
 

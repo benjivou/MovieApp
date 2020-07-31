@@ -70,12 +70,12 @@ class DetailFragment : Fragment() {
                             }
                         }
                     is ErrorMoviePrepared -> title.text = requireContext().getString(
-                        R.string.error_internet_serve_error,
+                        R.string.errorInternetServeError,
                         moviePrepared.errorCode,
                         moviePrepared.errorMessage
                     )
                     is EmptyMoviePrepared -> title.text =
-                        requireContext().getString(R.string.error_internet_void_answer)
+                        requireContext().getString(R.string.errorInternetVoidAnswer)
                 }
 
             }
