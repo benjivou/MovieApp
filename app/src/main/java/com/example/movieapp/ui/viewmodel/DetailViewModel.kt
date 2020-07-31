@@ -20,7 +20,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 private const val TAG = "DetailViewModel"
 
-// TODO afficher le movie n'a pas pu être trouver
 class DetailViewModel : ViewModel() {
 
     private var currentId: MutableLiveData<Int> = MutableLiveData()

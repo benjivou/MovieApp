@@ -19,4 +19,4 @@ sealed class MoviePrepared<T>() {
 
 class EmptyMoviePrepared<T> : MoviePrepared<T>()
 data class ErrorMoviePrepared<T>(val errorCode: Int, val errorMessage: String) : MoviePrepared<T>()
-data class SuccessMoviePrepared<T>(val body: T, val isLiked: Boolean) : MoviePrepared<T>()
+data class SuccessMoviePrepared<T>(val body: T, var isLiked: Boolean) : MoviePrepared<T>()

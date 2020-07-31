@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
+import com.example.movieapp.data.entities.displayabledata.SuccessMoviePrepared
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.ui.viewmodel.MainViewModel
 
@@ -14,10 +15,10 @@ class ListAdapter(
 ) :
     RecyclerView.Adapter<MovieViewHolder>() {
 
-    private var list: List<Pair<Movie, Boolean>> = listOf()
+    private var list: List<SuccessMoviePrepared<Movie>> = listOf()
 
     // change data and notify the change to RecyclerView
-    fun changeData(list: List<Pair<Movie, Boolean>>) {
+    fun changeData(list: List<SuccessMoviePrepared<Movie>>) {
         this.list = list
         notifyDataSetChanged()
     }

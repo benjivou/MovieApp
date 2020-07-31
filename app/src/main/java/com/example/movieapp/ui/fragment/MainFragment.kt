@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
+import com.example.movieapp.data.entities.displayabledata.ErrorMoviePrepared
+import com.example.movieapp.data.entities.displayabledata.MoviePrepared
+import com.example.movieapp.data.entities.displayabledata.SuccessMoviePrepared
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.TypeDisplay
 import com.example.movieapp.databinding.FragmentMainBinding
@@ -25,7 +27,7 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
 
     private lateinit var adapterList: ListAdapter
 
-    private val viewModel: MainViewModel by activityViewModels()
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +57,16 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
         }
 
         viewModel
-            .getListCurrent()
-            .observe(viewLifecycleOwner, Observer { movies ->
-                adapterList.changeData(movies)
+            .currentList
+            .observe(viewLifecycleOwner, Observer { movies: List<MoviePrepared<Movie>> ->
+                when (movies[0]) {
+                    is SuccessMoviePrepared<Movie> -> adapterList.changeData(movies as List<SuccessMoviePrepared<Movie>>)
+
+                }
+
             })
+
+        loadPage(TypeDisplay.LIKED)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -74,7 +82,7 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
         if (item.itemId == R.id.displayMoviesLiked) return true
 
         // change the list in the modelView
-        viewModel.getList(
+        loadPage(
             when (item.itemId) {
                 R.id.displayMoviesPopular -> TypeDisplay.POPULAR
                 R.id.displayMoviesMostRated -> TypeDisplay.RATED
@@ -84,6 +92,13 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
             }
         )
         return true
+    }
+
+    private fun loadPage(typeDisplay: TypeDisplay) {
+        viewModel.getList(
+            typeDisplay
+        )
+        titleList.text = typeDisplay.s
     }
 
     override fun onItemLiked(movie: Movie) {

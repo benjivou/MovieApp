@@ -14,7 +14,9 @@ import java.lang.reflect.Type
  * Created by Benjamin Vouillon on 17,July,2020
  */
 
-class LiveDataCallAdapter<R>(private val responseType: Type): CallAdapter<R, LiveData<ApiResponse<R>>> {
+class LiveDataCallAdapter<R>(private val responseType: Type) :
+    CallAdapter<R, LiveData<ApiResponse<R>>> {
+
     override fun adapt(call: Call<R>): MutableLiveData<ApiResponse<R>> {
         return object : MutableLiveData<ApiResponse<R>>() {
             private var isSuccess = false
