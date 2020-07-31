@@ -15,4 +15,7 @@
     <string name="like_button">like Button</string>
     <string name="likedSortByRated">sort by rated</string>
     <string name="sortByPopular">sort by popular</string>
+
+    <string name="error_internet_void_answer">It seems like the server has no data for this</string>
+    <string name="error_internet_serve_error">%1$d : %2$s</string>
 </resources>

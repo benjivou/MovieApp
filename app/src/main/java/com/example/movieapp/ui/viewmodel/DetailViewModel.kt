@@ -3,6 +3,10 @@ package com.example.movieapp.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.movieapp.App
+import com.example.movieapp.data.entities.displayabledata.EmptyMoviePrepared
+import com.example.movieapp.data.entities.displayabledata.ErrorMoviePrepared
+import com.example.movieapp.data.entities.displayabledata.MoviePrepared
+import com.example.movieapp.data.entities.displayabledata.SuccessMoviePrepared
 import com.example.movieapp.data.entities.internet.ApiEmptyResponse
 import com.example.movieapp.data.entities.internet.ApiErrorResponse
 import com.example.movieapp.data.entities.internet.ApiSuccessResponse
@@ -20,27 +24,43 @@ private const val TAG = "DetailViewModel"
 class DetailViewModel : ViewModel() {
 
     private var currentId: MutableLiveData<Int> = MutableLiveData()
-    private var _currentMoviePair = MediatorLiveData<Pair<Movie?, Boolean>>()
-    private var movieCurrent: LiveData<Movie?> = Transformations.switchMap(currentId) {
-        it?.let { internetCall(it.toString()) } ?: null
-    }
+    private var _currentMoviePair = MediatorLiveData<MoviePrepared<Movie>>()
+    private var movieCurrent: LiveData<MoviePrepared<Movie>> =
+        Transformations.switchMap(currentId) {
+            it?.let { internetCall(it.toString()) } ?: null
+        }
     private var isLikedMovie: LiveData<Boolean> =
         Transformations.switchMap(currentId) {
             Log.i(TAG, "getMovieAndIsLiked: $it")
             App.database.movieDAO().isLiked(it)
         }
 
-    val currentMoviePair: LiveData<Pair<Movie?, Boolean>>
+    val currentMoviePair: LiveData<MoviePrepared<Movie>>
         get() = _currentMoviePair
 
     init {
-        _currentMoviePair.addSource(movieCurrent) {
-            _currentMoviePair.value = Pair(it, isLikedMovie.value!!)
+
+        _currentMoviePair.addSource(movieCurrent) { moviePrepared ->
+            Log.d(TAG, "movieCurrent Modify ")
+
+            if (moviePrepared is SuccessMoviePrepared)
+                _currentMoviePair.value = SuccessMoviePrepared(
+                    moviePrepared.body,
+                    isLikedMovie.value!!
+                )
+            else {
+                _currentMoviePair.value = moviePrepared
+            }
         }
-        _currentMoviePair.addSource(isLikedMovie) { isLiked ->
-            Log.i(TAG, "isLiked : modif de la list de movie ")
-            _currentMoviePair.value =
-                Pair(movieCurrent.value, isLiked)
+
+        _currentMoviePair.addSource(isLikedMovie)
+        { isLiked ->
+            Log.d(TAG, "isLikedMLovie : Modified")
+            if (_currentMoviePair.value is SuccessMoviePrepared)
+                _currentMoviePair.value = SuccessMoviePrepared(
+                    (_currentMoviePair.value as SuccessMoviePrepared<Movie>).body,
+                    isLiked
+                )
         }
     }
 
@@ -56,22 +76,20 @@ class DetailViewModel : ViewModel() {
         currentId.value = idMovie
     }
 
-    private fun internetCall(idMovie: String): LiveData<Movie> {
+    private fun internetCall(idMovie: String): LiveData<MoviePrepared<Movie>> {
         return Transformations.map(service.movieById(idMovie)) {
             when (it) {
-                is ApiSuccessResponse -> it.body
-                is ApiEmptyResponse -> null
-                is ApiErrorResponse -> {
-                    Log.w(TAG, "internetCall: " + it.errorMessage)
-                    null
-                }
+                is ApiSuccessResponse -> SuccessMoviePrepared(it.body, false)
+                is ApiEmptyResponse -> EmptyMoviePrepared<Movie>()
+                is ApiErrorResponse -> ErrorMoviePrepared(it.errorCode, it.errorMessage)
             }
         }
     }
 
     fun likeOrUnlikeMovieExposed() {
-        movieCurrent?.let {
-            likeOrUnlikeMovie(it.value!!)
+        _currentMoviePair?.value?.let {
+            if (it is SuccessMoviePrepared<Movie>)
+                likeOrUnlikeMovie(it.body)
         }
     }
 

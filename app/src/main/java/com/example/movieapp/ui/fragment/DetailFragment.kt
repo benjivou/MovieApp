@@ -9,6 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.example.movieapp.R
+import com.example.movieapp.data.entities.displayabledata.EmptyMoviePrepared
+import com.example.movieapp.data.entities.displayabledata.ErrorMoviePrepared
+import com.example.movieapp.data.entities.displayabledata.SuccessMoviePrepared
 import com.example.movieapp.databinding.DetailFragmentBinding
 import com.example.movieapp.ui.adapter.PURL
 import com.example.movieapp.ui.viewmodel.DetailViewModel
@@ -39,26 +42,42 @@ class DetailFragment : Fragment() {
 
         viewModel.getMovieAndIsLiked(idMovie)
 
-        viewModel.currentMoviePair.observe(viewLifecycleOwner, Observer { (first, second) ->
+        viewModel.currentMoviePair.observe(viewLifecycleOwner, Observer { moviePrepared ->
             binding.apply {
-                first?.let {
-                    title.text = it.title
-                    overview.text = it.overview
-                    Picasso.get().load(PURL + it.posterPath).into(image)
-                    userRating.text =
-                        resources.getString(R.string.itemRate, it.voteAverage.toString())
-                    realeseDate.text = it.releaseDate
+                when (moviePrepared) {
+                    is SuccessMoviePrepared ->
+                        (moviePrepared as SuccessMoviePrepared)?.apply {
+                            body.let { movie ->
+                                title.text = movie.title
+                                overview.text = movie.overview
+                                Picasso.get().load(PURL + movie.posterPath).into(image)
+                                userRating.text =
+                                    resources.getString(
+                                        R.string.itemRate,
+                                        movie.voteAverage.toString()
+                                    )
+                                realeseDate.text = movie.releaseDate
 
-                    if (second) {
-                        likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
-                    } else {
-                        likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
-                    }
+                            }
+                            if (this.isLiked) {
+                                likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
+                            } else {
+                                likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
+                            }
 
-                    likeBtn.setOnClickListener {
-                        onLikeButtonClicked()
-                    }
+                            likeBtn.setOnClickListener {
+                                onLikeButtonClicked()
+                            }
+                        }
+                    is ErrorMoviePrepared -> title.text = requireContext().getString(
+                        R.string.error_internet_serve_error,
+                        moviePrepared.errorCode,
+                        moviePrepared.errorMessage
+                    )
+                    is EmptyMoviePrepared -> title.text =
+                        requireContext().getString(R.string.error_internet_void_answer)
                 }
+
             }
         })
     }
