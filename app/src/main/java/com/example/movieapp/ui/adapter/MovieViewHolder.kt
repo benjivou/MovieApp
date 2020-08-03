@@ -3,7 +3,6 @@ package com.example.movieapp.ui.adapter
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
-import com.example.movieapp.data.entities.displayabledata.SuccessMoviePrepared
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.databinding.ListItemBinding
 import com.squareup.picasso.Picasso
@@ -22,9 +21,9 @@ class MovieViewHolder(
     private var movie: Movie? = null
 
 
-    fun bind(successMoviePrepared: SuccessMoviePrepared<Movie,Boolean>) {
+    fun bind(pair: Pair<Movie,Boolean>) {
 
-        this.movie = successMoviePrepared.body
+        this.movie = pair.first
 
         binding.apply {
             itemView.resources.apply {
@@ -52,7 +51,7 @@ class MovieViewHolder(
             moviesViewHolderListener.onDetailsRequested(it, movie!!)
         })
 
-        if (successMoviePrepared.isLiked) {
+        if (pair.second) {
             binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
         } else {
             binding.likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)

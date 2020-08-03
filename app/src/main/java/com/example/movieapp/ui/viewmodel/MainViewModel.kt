@@ -27,6 +27,7 @@ const val URL = "https://api.themoviedb.org/3/movie/"
 
 class MainViewModel : ViewModel() {
 
+
     private val likedList = App.database.movieDAO().getAll()
 
     private val service: MoviesService = Retrofit.Builder()
@@ -39,17 +40,19 @@ class MainViewModel : ViewModel() {
     /**
      * Type of the list displayed
      */
-    private var typeDisplay: MutableLiveData<TypeDisplay> =
+    private val _typeDisplay: MutableLiveData<TypeDisplay> =
         MutableLiveData(TypeDisplay.POPULAR)
 
-    // List of raw Movies
-    // TODO remove isLiked by default
+    val currentTypeDisplay: TypeDisplay
+        get() = _typeDisplay.value!!
+
+
     private var movieList =
         Transformations.switchMap<TypeDisplay, MoviePrepared<List<Pair<Movie, Boolean>>>>(
-            this.typeDisplay
+            this._typeDisplay
         )
         {
-            when (typeDisplay.value) {
+            when (_typeDisplay.value) {
                 TypeDisplay.LIKED -> Transformations.map(App.database.movieDAO().getAll()) {
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
@@ -61,7 +64,6 @@ class MainViewModel : ViewModel() {
                 }
                 else -> internetCall()
             }
-
         }
 
     // List of Movies ready to be displayed
@@ -73,7 +75,7 @@ class MainViewModel : ViewModel() {
     init {
         _currentList.addSource(likedList) { listMovies ->
 
-            val bufM = movieList.value!!
+            val bufM = movieList.value
             if (bufM is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
                 _currentList.value = SuccessMoviePrepared(bufM.content.map {
                     Pair(it.first, listMovies.contains(it.first))
@@ -82,11 +84,10 @@ class MainViewModel : ViewModel() {
         }
 
         _currentList.addSource(movieList) { listMoviePrepared ->
-            var buf = mutableListOf<Pair<Movie, Boolean>>()
             _currentList.value =
                 if (listMoviePrepared is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
                     SuccessMoviePrepared(listMoviePrepared.content.map {
-                        Pair<Movie, Boolean>(it.first, it.second)
+                        Pair(it.first, it.second)
                     })
                 } else {
                     listMoviePrepared
@@ -96,11 +97,11 @@ class MainViewModel : ViewModel() {
 
 
     fun getList(typeDisplay: TypeDisplay) {
-        this.typeDisplay.value = typeDisplay
+        this._typeDisplay.value = typeDisplay
     }
 
     private fun internetCall(): LiveData<MoviePrepared<List<Pair<Movie, Boolean>>>> =
-        Transformations.map(service.listOfMovies(typeDisplay.value!!.s)) {
+        Transformations.map(service.listOfMovies(_typeDisplay.value!!.s)) {
             when (it) {
                 is ApiSuccessResponse -> SuccessMoviePrepared(it.body.results.map { movie ->
                     Pair(movie, false)

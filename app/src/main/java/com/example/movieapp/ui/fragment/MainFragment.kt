@@ -5,14 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
 import com.example.movieapp.data.entities.displayabledata.EmptyMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.ErrorMoviePrepared
-import com.example.movieapp.data.entities.displayabledata.MoviePrepared
 import com.example.movieapp.data.entities.displayabledata.SuccessMoviePrepared
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.TypeDisplay
@@ -20,6 +19,7 @@ import com.example.movieapp.databinding.FragmentMainBinding
 import com.example.movieapp.ui.adapter.ListAdapter
 import com.example.movieapp.ui.adapter.MovieViewHolder
 import com.example.movieapp.ui.viewmodel.MainViewModel
+import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
 private const val TAG = "MainFragment"
@@ -29,7 +29,7 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
 
     private lateinit var adapterList: ListAdapter
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,31 +60,30 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
 
         viewModel
             .currentList
-            .observe(viewLifecycleOwner, Observer { movies: List<MoviePrepared<Movie,Boolean>> ->
-                when (movies[0]) {
-
-                    is SuccessMoviePrepared<Movie,Boolean> -> {
-                        adapterList.changeData(movies as List<SuccessMoviePrepared<Movie,Boolean>>)
+            .observe(viewLifecycleOwner, Observer { movies ->
+                when (movies) {
+                    is SuccessMoviePrepared<List<Pair<Movie, Boolean>>> -> {
+                        titleList.text = converteTypeDisplayToTitle(viewModel.currentTypeDisplay)
+                        adapterList.changeData(movies.content)
                         errorText.visibility = View.GONE
                         titleList.visibility = View.VISIBLE
                         listRecyclerView.visibility = View.VISIBLE
                     }
 
-                    is ErrorMoviePrepared<Movie,Boolean> ->
+                    is ErrorMoviePrepared<List<Pair<Movie, Boolean>>> ->
                         displayError(
                             requireContext().getString(
                                 R.string.errorInternetServeError,
-                                (movies[0] as ErrorMoviePrepared<Movie,Boolean>).errorCode,
-                                (movies[0] as ErrorMoviePrepared<Movie,Boolean>).errorMessage
+                                movies.errorCode, movies.errorMessage
                             )
                         )
 
-                    is EmptyMoviePrepared<Movie,Boolean> ->
+                    is EmptyMoviePrepared<List<Pair<Movie, Boolean>>> ->
                         displayError(requireContext().getString(R.string.errorInternetVoidAnswer))
                 }
             })
 
-        loadPage(TypeDisplay.LIKED) //TODO Remove and replace it
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -116,15 +115,7 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
         viewModel.getList(
             typeDisplay
         )
-        titleList.text = getString(
-            when (typeDisplay) {
-                TypeDisplay.POPULAR -> R.string.popularListTitle
-                TypeDisplay.RATED -> R.string.ratedListTitle
-                TypeDisplay.LIKED -> R.string.likedListTitle
-                TypeDisplay.LIKED_POPULAR -> R.string.likedPopularListTitle
-                TypeDisplay.LIKED_RATED -> R.string.likedRatedListTitle
-            }
-        )
+        titleList.text = converteTypeDisplayToTitle(typeDisplay)
     }
 
     override fun onItemLiked(movie: Movie) {
@@ -146,6 +137,18 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
         errorText.visibility = View.VISIBLE
         titleList.visibility = View.INVISIBLE
         listRecyclerView.visibility = View.INVISIBLE
+    }
+
+    private fun converteTypeDisplayToTitle(typeDisplay: TypeDisplay): String {
+        return getString(
+            when (typeDisplay) {
+                TypeDisplay.POPULAR -> R.string.popularListTitle
+                TypeDisplay.RATED -> R.string.ratedListTitle
+                TypeDisplay.LIKED -> R.string.likedListTitle
+                TypeDisplay.LIKED_POPULAR -> R.string.likedPopularListTitle
+                TypeDisplay.LIKED_RATED -> R.string.likedRatedListTitle
+            }
+        )
     }
 
 }

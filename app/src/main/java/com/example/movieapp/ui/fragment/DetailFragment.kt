@@ -45,8 +45,8 @@ class DetailFragment : Fragment() {
             binding.apply {
                 when (moviePrepared) {
                     is SuccessMoviePrepared ->
-                        moviePrepared.apply {
-                            body.let { movie ->
+                        moviePrepared.content.apply {
+                            first.let { movie ->
                                 title.text = movie.title
                                 overview.text = movie.overview
                                 Picasso.get().load(PURL + movie.posterPath).into(image)
@@ -58,7 +58,7 @@ class DetailFragment : Fragment() {
                                 realeseDate.text = movie.releaseDate
 
                             }
-                            if (this.isLiked) {
+                            if (second) {
                                 likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
                             } else {
                                 likeBtn.setImageResource(R.drawable.ic_favorite_border_black_18dp)
