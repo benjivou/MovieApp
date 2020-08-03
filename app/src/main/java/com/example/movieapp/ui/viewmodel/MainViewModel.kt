@@ -1,6 +1,7 @@
 package com.example.movieapp.ui.viewmodel
 
 
+import android.os.Bundle
 import androidx.lifecycle.*
 import com.example.movieapp.App
 import com.example.movieapp.data.entities.displayabledata.EmptyMoviePrepared
@@ -13,9 +14,8 @@ import com.example.movieapp.data.entities.internet.ApiSuccessResponse
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.TypeDisplay
 import com.example.movieapp.data.util.Handler
-import com.example.movieapp.data.util.Handler.Companion.deleteMovie
-import com.example.movieapp.data.util.Handler.Companion.insertMovie
 import com.example.movieapp.data.util.Singleton.service
+
 
 /**
  * Created by Benjamin Vouillon on 08,July,2020
@@ -85,6 +85,8 @@ class MainViewModel : ViewModel() {
                 }
         }
     }
+
+
 
 
     fun getList(typeDisplay: TypeDisplay) {
