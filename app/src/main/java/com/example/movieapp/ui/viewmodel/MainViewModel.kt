@@ -87,7 +87,7 @@ class MainViewModel : ViewModel() {
             _currentList.value =
                 if (listMoviePrepared is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
                     SuccessMoviePrepared(listMoviePrepared.content.map {
-                        Pair(it.first, it.second)
+                        Pair(it.first, likedList.value?.contains(it.first) ?: false)
                     })
                 } else {
                     listMoviePrepared

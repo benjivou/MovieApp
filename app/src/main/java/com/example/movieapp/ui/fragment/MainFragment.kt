@@ -19,7 +19,6 @@ import com.example.movieapp.databinding.FragmentMainBinding
 import com.example.movieapp.ui.adapter.ListAdapter
 import com.example.movieapp.ui.adapter.MovieViewHolder
 import com.example.movieapp.ui.viewmodel.MainViewModel
-import kotlinx.android.synthetic.main.detail_fragment.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
 private const val TAG = "MainFragment"
@@ -62,6 +61,7 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
             .currentList
             .observe(viewLifecycleOwner, Observer { movies ->
                 when (movies) {
+
                     is SuccessMoviePrepared<List<Pair<Movie, Boolean>>> -> {
                         titleList.text = converteTypeDisplayToTitle(viewModel.currentTypeDisplay)
                         adapterList.changeData(movies.content)
@@ -82,8 +82,6 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
                         displayError(requireContext().getString(R.string.errorInternetVoidAnswer))
                 }
             })
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
