@@ -23,10 +23,10 @@ private const val TAG = "DetailViewModel"
 class DetailViewModel : ViewModel() {
 
     private var currentId: MutableLiveData<Int> = MutableLiveData()
-    private var _currentMoviePair = MediatorLiveData<MoviePrepared<Movie>>()
-    private var movieCurrent: LiveData<MoviePrepared<Movie>> =
+    private var _currentMoviePair = MediatorLiveData<MoviePrepared<Movie,Boolean>>()
+    private var movieCurrent: LiveData<MoviePrepared<Movie,Boolean>> =
         Transformations.switchMap(currentId) {
-            it?.let { internetCall(it.toString()) } ?: null
+            it?.let { internetCall(it.toString()) }
         }
     private var isLikedMovie: LiveData<Boolean> =
         Transformations.switchMap(currentId) {
@@ -34,11 +34,13 @@ class DetailViewModel : ViewModel() {
             App.database.movieDAO().isLiked(it)
         }
 
-    val currentMoviePair: LiveData<MoviePrepared<Movie>>
+    val currentMoviePair: LiveData<MoviePrepared<Movie,Boolean>>
         get() = _currentMoviePair
+
 
     init {
 
+        // TODO moviePrepared.isLiked = isLikedMovie
         _currentMoviePair.addSource(movieCurrent) { moviePrepared ->
             Log.d(TAG, "movieCurrent Modify ")
 
@@ -52,17 +54,19 @@ class DetailViewModel : ViewModel() {
             }
         }
 
+        // TODO verify if I neeed to recreate another SucessMoviePrepared
         _currentMoviePair.addSource(isLikedMovie)
         { isLiked ->
             Log.d(TAG, "isLikedMLovie : Modified")
             if (_currentMoviePair.value is SuccessMoviePrepared)
                 _currentMoviePair.value = SuccessMoviePrepared(
-                    (_currentMoviePair.value as SuccessMoviePrepared<Movie>).body,
+                    (_currentMoviePair.value as SuccessMoviePrepared<Movie,Boolean>).body,
                     isLiked
                 )
         }
     }
 
+    // TODO (reuse thinks ) Or Singleton ( instate just 1 time )
     private val service: MoviesService = Retrofit.Builder()
         .baseUrl(URL)
         .addConverterFactory(GsonConverterFactory.create())
@@ -75,34 +79,35 @@ class DetailViewModel : ViewModel() {
         currentId.value = idMovie
     }
 
-    private fun internetCall(idMovie: String): LiveData<MoviePrepared<Movie>> {
+    private fun internetCall(idMovie: String): LiveData<MoviePrepared<Movie,Boolean>> {
         return Transformations.map(service.movieById(idMovie)) {
             when (it) {
                 is ApiSuccessResponse -> SuccessMoviePrepared(it.body, false)
-                is ApiEmptyResponse -> EmptyMoviePrepared<Movie>()
+                is ApiEmptyResponse -> EmptyMoviePrepared<Movie,Boolean>()
                 is ApiErrorResponse -> ErrorMoviePrepared(it.errorCode, it.errorMessage)
             }
         }
     }
 
     fun likeOrUnlikeMovieExposed() {
-        _currentMoviePair?.value?.let {
-            if (it is SuccessMoviePrepared<Movie>)
+        _currentMoviePair.value.let {
+            if (it is SuccessMoviePrepared<Movie,Boolean>)
                 likeOrUnlikeMovie(it.body)
         }
     }
 
+    // TODO handler for insertMovie/deleteMovie/LikeOrUnlikeMovie
     private fun likeOrUnlikeMovie(movie: Movie) {
-        Log.i(com.example.movieapp.ui.viewmodel.TAG, "doOnLikePress: click button pressed")
+        Log.i(TAG, "doOnLikePress: click button pressed")
         if (isLikedMovie.value == true) {
             Log.i(
-                com.example.movieapp.ui.viewmodel.TAG,
+                TAG,
                 "doOnLikePress: onLikeButtonClicked: delete "
             )
             deleteMovie(movie)
         } else {
             Log.i(
-                com.example.movieapp.ui.viewmodel.TAG,
+                TAG,
                 "doOnLikePress: onLikeButtonClicked: insert "
             )
             insertMovie(movie)

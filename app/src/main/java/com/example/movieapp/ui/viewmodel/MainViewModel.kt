@@ -24,7 +24,6 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 
 const val URL = "https://api.themoviedb.org/3/movie/"
-private const val TAG = "MainViewModel"
 
 class MainViewModel : ViewModel() {
 
@@ -44,79 +43,73 @@ class MainViewModel : ViewModel() {
         MutableLiveData(TypeDisplay.POPULAR)
 
     // List of raw Movies
+    // TODO remove isLiked by default
+    private var movieList =
+        Transformations.switchMap<TypeDisplay, MoviePrepared<List<Pair<Movie, Boolean>>>>(
+            this.typeDisplay
+        )
+        {
+            when (typeDisplay.value) {
+                TypeDisplay.LIKED -> Transformations.map(App.database.movieDAO().getAll()) {
+                    convertMoviesToSuccessMoviesPrepared(it)
+                }
+                TypeDisplay.LIKED_POPULAR -> Transformations.map(App.database.movieDAO().getAll()) {
+                    convertMoviesToSuccessMoviesPrepared(it)
+                }
+                TypeDisplay.LIKED_RATED -> Transformations.map(App.database.movieDAO().getAll()) {
+                    convertMoviesToSuccessMoviesPrepared(it)
+                }
+                else -> internetCall()
+            }
 
-    private var movieList = Transformations.switchMap<TypeDisplay, List<MoviePrepared<Movie>>>(
-        this.typeDisplay
-    )
-    {
-        when (typeDisplay.value) {
-            TypeDisplay.LIKED -> Transformations.map(App.database.movieDAO().getAll()) {
-                it.map { movie -> SuccessMoviePrepared(movie, false) }
-            }
-            TypeDisplay.LIKED_POPULAR -> Transformations.map(App.database.movieDAO().getAll()) {
-                it.map { movie -> SuccessMoviePrepared(movie, false) }
-            }
-            TypeDisplay.LIKED_RATED -> Transformations.map(App.database.movieDAO().getAll()) {
-                it.map { movie -> SuccessMoviePrepared(movie, false) }
-            }
-            else -> internetCall()
         }
 
-    }
-
     // List of Movies ready to be displayed
-    private var _currentList = MediatorLiveData<List<MoviePrepared<Movie>>>()
-    val currentList: LiveData<List<MoviePrepared<Movie>>>
+    private var _currentList =
+        MediatorLiveData<MoviePrepared<List<Pair<Movie, Boolean>>>>()
+    val currentList: LiveData<MoviePrepared<List<Pair<Movie, Boolean>>>>
         get() = _currentList
+
     init {
         _currentList.addSource(likedList) { listMovies ->
-            val buf = mutableListOf<MoviePrepared<Movie>>()
-            if (movieList.value?.get(0) is SuccessMoviePrepared<Movie>) {
-                (movieList.value as List<SuccessMoviePrepared<Movie>>)?.forEach {
-                    buf.add(SuccessMoviePrepared(it.body, listMovies.contains(it.body)))
-                }
-                _currentList.value = buf
-            }
 
+            val bufM = movieList.value!!
+            if (bufM is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
+                _currentList.value = SuccessMoviePrepared(bufM.content.map {
+                    Pair(it.first, listMovies.contains(it.first))
+                })
+            }
         }
 
         _currentList.addSource(movieList) { listMoviePrepared ->
-            var buf = mutableListOf<MoviePrepared<Movie>>()
-            if (listMoviePrepared.get(0) is SuccessMoviePrepared<Movie>) {
-                (listMoviePrepared as List<SuccessMoviePrepared<Movie>>)?.forEach {
-                    buf.add(SuccessMoviePrepared(it.body, likedList.value?.contains(it.body)?:false))
+            var buf = mutableListOf<Pair<Movie, Boolean>>()
+            _currentList.value =
+                if (listMoviePrepared is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
+                    SuccessMoviePrepared(listMoviePrepared.content.map {
+                        Pair<Movie, Boolean>(it.first, it.second)
+                    })
+                } else {
+                    listMoviePrepared
                 }
-            } else {
-                buf.add(listMoviePrepared[0])
-            }
-            _currentList.value = buf
         }
     }
-
 
 
     fun getList(typeDisplay: TypeDisplay) {
         this.typeDisplay.value = typeDisplay
     }
 
-    private fun internetCall(): LiveData<List<MoviePrepared<Movie>>> =
+    private fun internetCall(): LiveData<MoviePrepared<List<Pair<Movie, Boolean>>>> =
         Transformations.map(service.listOfMovies(typeDisplay.value!!.s)) {
             when (it) {
-                is ApiSuccessResponse -> it.body.results.map { movie ->
-                    SuccessMoviePrepared(
-                        movie,
-                        false
-                    )
-                }
+                is ApiSuccessResponse -> SuccessMoviePrepared(it.body.results.map { movie ->
+                    Pair(movie, false)
+                })
                 is ApiEmptyResponse -> {
-                    val list = mutableListOf<MoviePrepared<Movie>>()
-                    list.add(EmptyMoviePrepared())
-                    list
+                    EmptyMoviePrepared<List<Pair<Movie, Boolean>>>()
                 }
                 is ApiErrorResponse -> {
-                    val list = mutableListOf<MoviePrepared<Movie>>()
-                    list.add(ErrorMoviePrepared(it.errorCode, it.errorMessage))
-                    list
+                    ErrorMoviePrepared(it.errorCode, it.errorMessage)
                 }
             }
         }
@@ -140,5 +133,11 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             App.database.movieDAO().deleteMovie(movie)
         }
+    }
+
+    private fun convertMoviesToSuccessMoviesPrepared(movies: List<Movie>): SuccessMoviePrepared<List<Pair<Movie, Boolean>>> {
+        val res = mutableListOf<Pair<Movie, Boolean>>()
+        movies.forEach { movie -> res.add(Pair(movie, true)) }
+        return SuccessMoviePrepared(res.toList())
     }
 }

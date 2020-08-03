@@ -21,7 +21,6 @@ import com.squareup.picasso.Picasso
 /**
  * Created by Benjamin Vouillon on 23,July,2020
  */
-private const val TAG = "DetailFragment"
 
 class DetailFragment : Fragment() {
 
@@ -46,7 +45,7 @@ class DetailFragment : Fragment() {
             binding.apply {
                 when (moviePrepared) {
                     is SuccessMoviePrepared ->
-                        (moviePrepared as SuccessMoviePrepared)?.apply {
+                        moviePrepared.apply {
                             body.let { movie ->
                                 title.text = movie.title
                                 overview.text = movie.overview

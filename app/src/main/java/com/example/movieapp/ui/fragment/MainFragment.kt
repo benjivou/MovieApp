@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 private const val TAG = "MainFragment"
 
+// TOdo return
 class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
 
     private lateinit var adapterList: ListAdapter
@@ -59,31 +60,31 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
 
         viewModel
             .currentList
-            .observe(viewLifecycleOwner, Observer { movies: List<MoviePrepared<Movie>> ->
+            .observe(viewLifecycleOwner, Observer { movies: List<MoviePrepared<Movie,Boolean>> ->
                 when (movies[0]) {
 
-                    is SuccessMoviePrepared<Movie> -> {
-                        adapterList.changeData(movies as List<SuccessMoviePrepared<Movie>>)
+                    is SuccessMoviePrepared<Movie,Boolean> -> {
+                        adapterList.changeData(movies as List<SuccessMoviePrepared<Movie,Boolean>>)
                         errorText.visibility = View.GONE
                         titleList.visibility = View.VISIBLE
                         listRecyclerView.visibility = View.VISIBLE
                     }
 
-                    is ErrorMoviePrepared<Movie> ->
+                    is ErrorMoviePrepared<Movie,Boolean> ->
                         displayError(
                             requireContext().getString(
                                 R.string.errorInternetServeError,
-                                (movies[0] as ErrorMoviePrepared<Movie>).errorCode,
-                                (movies[0] as ErrorMoviePrepared<Movie>).errorMessage
+                                (movies[0] as ErrorMoviePrepared<Movie,Boolean>).errorCode,
+                                (movies[0] as ErrorMoviePrepared<Movie,Boolean>).errorMessage
                             )
                         )
 
-                    is EmptyMoviePrepared<Movie> ->
+                    is EmptyMoviePrepared<Movie,Boolean> ->
                         displayError(requireContext().getString(R.string.errorInternetVoidAnswer))
                 }
             })
 
-        loadPage(TypeDisplay.LIKED)
+        loadPage(TypeDisplay.LIKED) //TODO Remove and replace it
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

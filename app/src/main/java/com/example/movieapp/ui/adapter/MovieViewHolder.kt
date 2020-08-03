@@ -22,7 +22,7 @@ class MovieViewHolder(
     private var movie: Movie? = null
 
 
-    fun bind(successMoviePrepared: SuccessMoviePrepared<Movie>) {
+    fun bind(successMoviePrepared: SuccessMoviePrepared<Movie,Boolean>) {
 
         this.movie = successMoviePrepared.body
 
