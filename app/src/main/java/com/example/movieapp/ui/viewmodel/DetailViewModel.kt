@@ -10,13 +10,9 @@ import com.example.movieapp.data.entities.displayabledata.SuccessMoviePrepared
 import com.example.movieapp.data.entities.internet.ApiEmptyResponse
 import com.example.movieapp.data.entities.internet.ApiErrorResponse
 import com.example.movieapp.data.entities.internet.ApiSuccessResponse
-import com.example.movieapp.data.entities.internet.MoviesService
 import com.example.movieapp.data.model.Movie
-import com.example.movieapp.ui.livedata.LiveDataCallAdapterFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.movieapp.data.util.Handler.Companion.likeOrUnlikeMovie
+import com.example.movieapp.data.util.Singleton.service
 
 private const val TAG = "DetailViewModel"
 
@@ -40,10 +36,8 @@ class DetailViewModel : ViewModel() {
 
     init {
 
-        // TODO moviePrepared.isLiked = isLikedMovie
         _currentMoviePair.addSource(movieCurrent) { moviePrepared ->
             Log.d(TAG, "movieCurrent Modify ")
-
             if (moviePrepared is SuccessMoviePrepared)
                 isLikedMovie.value?.let {
                     _currentMoviePair.value = SuccessMoviePrepared(
@@ -57,8 +51,6 @@ class DetailViewModel : ViewModel() {
                 _currentMoviePair.value = moviePrepared
         }
 
-
-        // TODO verify if I neeed to recreate another SucessMoviePrepared
         _currentMoviePair.addSource(isLikedMovie)
         { isLiked ->
             Log.d(TAG, "isLikedMLovie : Modified")
@@ -72,15 +64,6 @@ class DetailViewModel : ViewModel() {
                 )
         }
     }
-
-    // TODO (reuse thinks ) Or Singleton ( instate just 1 time )
-    private val service: MoviesService = Retrofit.Builder()
-        .baseUrl(URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(LiveDataCallAdapterFactory())
-        .build()
-        .create(MoviesService::class.java)
-
 
     fun getMovieAndIsLiked(idMovie: Int) {
         currentId.value = idMovie
@@ -99,37 +82,9 @@ class DetailViewModel : ViewModel() {
     fun likeOrUnlikeMovieExposed() {
         _currentMoviePair.value.let {
             if (it is SuccessMoviePrepared<Pair<Movie, Boolean>>)
-                likeOrUnlikeMovie(it.content.first)
+                likeOrUnlikeMovie(it.content.first, viewModelScope, isLikedMovie.value!!)
         }
     }
 
-    // TODO handler for insertMovie/deleteMovie/LikeOrUnlikeMovie
-    private fun likeOrUnlikeMovie(movie: Movie) {
-        Log.i(TAG, "doOnLikePress: click button pressed")
-        if (isLikedMovie.value == true) {
-            Log.i(
-                TAG,
-                "doOnLikePress: onLikeButtonClicked: delete "
-            )
-            deleteMovie(movie)
-        } else {
-            Log.i(
-                TAG,
-                "doOnLikePress: onLikeButtonClicked: insert "
-            )
-            insertMovie(movie)
-        }
-    }
 
-    private fun insertMovie(movie: Movie) {
-        viewModelScope.launch(Dispatchers.IO) {
-            App.database.movieDAO().insertMovie(movie)
-        }
-    }
-
-    private fun deleteMovie(movie: Movie) {
-        viewModelScope.launch(Dispatchers.IO) {
-            App.database.movieDAO().deleteMovie(movie)
-        }
-    }
 }

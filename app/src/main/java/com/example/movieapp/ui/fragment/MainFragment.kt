@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.fragment_main.*
 
 private const val TAG = "MainFragment"
 
-// TOdo return
 class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
 
     private lateinit var adapterList: ListAdapter

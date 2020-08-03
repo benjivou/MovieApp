@@ -10,14 +10,12 @@ import com.example.movieapp.data.entities.displayabledata.SuccessMoviePrepared
 import com.example.movieapp.data.entities.internet.ApiEmptyResponse
 import com.example.movieapp.data.entities.internet.ApiErrorResponse
 import com.example.movieapp.data.entities.internet.ApiSuccessResponse
-import com.example.movieapp.data.entities.internet.MoviesService
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.TypeDisplay
-import com.example.movieapp.ui.livedata.LiveDataCallAdapterFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.example.movieapp.data.util.Handler
+import com.example.movieapp.data.util.Handler.Companion.deleteMovie
+import com.example.movieapp.data.util.Handler.Companion.insertMovie
+import com.example.movieapp.data.util.Singleton.service
 
 /**
  * Created by Benjamin Vouillon on 08,July,2020
@@ -29,13 +27,6 @@ class MainViewModel : ViewModel() {
 
 
     private val likedList = App.database.movieDAO().getAll()
-
-    private val service: MoviesService = Retrofit.Builder()
-        .baseUrl(URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(LiveDataCallAdapterFactory())
-        .build()
-        .create(MoviesService::class.java)
 
     /**
      * Type of the list displayed
@@ -117,24 +108,9 @@ class MainViewModel : ViewModel() {
 
 
     fun likeOrUnlikeMovie(movie: Movie) {
-        if (likedList.value?.contains(movie) == true) {
-            deleteMovie(movie)
-        } else {
-            insertMovie(movie)
-        }
+        Handler.likeOrUnlikeMovie(movie,viewModelScope, this.likedList.value!!.contains(movie))
     }
 
-    private fun insertMovie(movie: Movie) {
-        viewModelScope.launch(Dispatchers.IO) {
-            App.database.movieDAO().insertMovie(movie)
-        }
-    }
-
-    private fun deleteMovie(movie: Movie) {
-        viewModelScope.launch(Dispatchers.IO) {
-            App.database.movieDAO().deleteMovie(movie)
-        }
-    }
 
     private fun convertMoviesToSuccessMoviesPrepared(movies: List<Movie>): SuccessMoviePrepared<List<Pair<Movie, Boolean>>> {
         val res = mutableListOf<Pair<Movie, Boolean>>()
