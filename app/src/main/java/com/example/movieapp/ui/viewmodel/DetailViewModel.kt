@@ -54,11 +54,11 @@ class DetailViewModel : ViewModel() {
         _currentMoviePair.addSource(isLikedMovie)
         { isLiked ->
             Log.d(TAG, "isLikedMLovie : Modified")
-            val toto = _currentMoviePair.value
-            if (toto is SuccessMoviePrepared)
+            val moviePrepared = _currentMoviePair.value
+            if (moviePrepared is SuccessMoviePrepared)
                 _currentMoviePair.value = SuccessMoviePrepared(
                     Pair(
-                        toto.content.first,
+                        moviePrepared.content.first,
                         isLiked
                     )
                 )
