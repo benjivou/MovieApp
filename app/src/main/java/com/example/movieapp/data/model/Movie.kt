@@ -1,10 +1,8 @@
 package com.example.movieapp.data.model
 
-import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import com.google.gson.reflect.TypeToken
 import io.realm.RealmObject
-import java.lang.reflect.Type
+import io.realm.annotations.PrimaryKey
 
 
 /**
@@ -12,7 +10,7 @@ import java.lang.reflect.Type
  */
 
 data class Movie(
-    @SerializedName("id") val id: Int,
+    @PrimaryKey @SerializedName("id") val id: Int,
     @SerializedName("popularity") val popularity: Float,
     @SerializedName("vote_pount") val votePount: Int,
     @SerializedName("video") val video: Boolean,
