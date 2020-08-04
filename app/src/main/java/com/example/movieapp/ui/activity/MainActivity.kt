@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.activity
 
+
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.databinding.ActivityFragmentBinding

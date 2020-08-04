@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
 import com.example.movieapp.data.model.Movie
-import com.example.movieapp.ui.viewmodel.MainViewModel
 
 class ListAdapter(
     private val context: Context,

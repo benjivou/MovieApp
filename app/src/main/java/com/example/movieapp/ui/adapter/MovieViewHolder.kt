@@ -13,7 +13,10 @@ import com.squareup.picasso.Picasso
 const val PURL = "https://image.tmdb.org/t/p/w185"
 private val TAG = "MovieViewHolder"
 
-class MovieViewHolder(itemView: View, private val moviesViewHolderListener: MoviesViewHolderListener) : RecyclerView.ViewHolder(itemView) {
+class MovieViewHolder(
+    itemView: View,
+    private val moviesViewHolderListener: MoviesViewHolderListener
+) : RecyclerView.ViewHolder(itemView) {
     private val binding = ListItemBinding.bind(itemView)
     private var movie: Movie? = null
 
@@ -44,6 +47,10 @@ class MovieViewHolder(itemView: View, private val moviesViewHolderListener: Movi
             }
         )
 
+        binding.image.setOnClickListener(View.OnClickListener {
+            moviesViewHolderListener.onDetailsRequested(it, movie!!)
+        })
+
         if (pair.second) {
             binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
         } else {
@@ -51,7 +58,11 @@ class MovieViewHolder(itemView: View, private val moviesViewHolderListener: Movi
         }
     }
 
-    public interface MoviesViewHolderListener {
+    interface MoviesViewHolderListener {
         fun onItemLiked(movie: Movie)
+        fun onDetailsRequested(
+            view: View,
+            movie: Movie
+        )
     }
 }

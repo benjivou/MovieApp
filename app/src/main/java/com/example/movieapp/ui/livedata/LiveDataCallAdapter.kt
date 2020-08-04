@@ -2,8 +2,8 @@ package com.example.movieapp.ui.livedata
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.movieapp.data.entities.ApiResponse
-import com.example.movieapp.data.entities.UNKNOWN_CODE
+import com.example.movieapp.data.entities.internet.ApiResponse
+import com.example.movieapp.data.entities.internet.UNKNOWN_CODE
 import retrofit2.Call
 import retrofit2.CallAdapter
 import retrofit2.Callback
@@ -14,7 +14,9 @@ import java.lang.reflect.Type
  * Created by Benjamin Vouillon on 17,July,2020
  */
 
-class LiveDataCallAdapter<R>(private val responseType: Type): CallAdapter<R, LiveData<ApiResponse<R>>> {
+class LiveDataCallAdapter<R>(private val responseType: Type) :
+    CallAdapter<R, LiveData<ApiResponse<R>>> {
+
     override fun adapt(call: Call<R>): MutableLiveData<ApiResponse<R>> {
         return object : MutableLiveData<ApiResponse<R>>() {
             private var isSuccess = false
