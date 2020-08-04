@@ -21,7 +21,7 @@ class MovieViewHolder(
     private var movie: Movie? = null
 
 
-    fun bind(pair: Pair<Movie,Boolean>) {
+    fun bind(pair: Pair<Movie, Boolean>) {
 
         this.movie = pair.first
 
