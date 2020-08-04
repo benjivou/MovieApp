@@ -9,14 +9,5 @@ import com.example.movieapp.data.dao.AppDatabase
  */
 class App : Application() {
 
-    companion object {
-        lateinit var database: AppDatabase
-    }
 
-    override fun onCreate() {
-        super.onCreate()
-
-        database = Room.databaseBuilder(this, AppDatabase::class.java, "DBMovies")
-            .fallbackToDestructiveMigration().build()
-    }
 }
