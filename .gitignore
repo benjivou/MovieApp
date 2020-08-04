@@ -51,7 +51,6 @@ proguard/
 captures/
 
 # IntelliJ
-*.iml
 .idea/*
 !.idea/codeStyles
 .idea/.name
@@ -100,13 +99,13 @@ lint/tmp/
 lint/reports/
 
 # Ignore Mac DS_Store files
-.DS_Store
 **/.DS_Store
 
 # Secrets
 app/src/main/res/values/secrets.xml
 app/src/app/res/values/secrets.xml
-app/src/main/java/com/example/movieapp/crawler/UntrackedKey.kt
+app/src/main/java/com/example/movieapp/data/untracked/UntrackedKey.kt
 # Phrase
 
 .phrase.yml
+*.mp4
