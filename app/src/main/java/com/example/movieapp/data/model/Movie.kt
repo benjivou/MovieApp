@@ -9,19 +9,26 @@ import io.realm.annotations.PrimaryKey
  * Created by Benjamin Vouillon on 08,July,2020
  */
 
-data class Movie(
-    @PrimaryKey @SerializedName("id") val id: Int,
-    @SerializedName("popularity") val popularity: Float,
-    @SerializedName("vote_pount") val votePount: Int,
-    @SerializedName("video") val video: Boolean,
-    @SerializedName("poster_path") val posterPath: String,
-    @SerializedName("adult") val adult: Boolean,
-    @SerializedName("backdrop_path") val backdropPath: String,
-    @SerializedName("original_language") val originalLanguage: String,
-    @SerializedName("original_title") val originalTitle: String,
-    @SerializedName("genreIds") val genreIds: List<Int>?,
-    @SerializedName("title") val title: String,
-    @SerializedName("vote_average") val voteAverage: Float,
-    @SerializedName("overview") val overview: String,
-    @SerializedName("release_date") val releaseDate: String
-) : RealmObject()
+open class Movie(
+    @PrimaryKey @SerializedName("id") var id: Int? = null,
+    @SerializedName("popularity") var popularity: Float? = null,
+    @SerializedName("vote_pount") var votePount: Int? = null,
+    @SerializedName("video") var video: Boolean? = null,
+    @SerializedName("poster_path") var posterPath: String? = null,
+    @SerializedName("adult") var adult: Boolean? = null,
+    @SerializedName("backdrop_path") var backdropPath: String? = null,
+    @SerializedName("original_language") var originalLanguage: String? = null,
+    @SerializedName("original_title") var originalTitle: String? = null,
+    @SerializedName("title") var title: String? = null,
+    @SerializedName("vote_average") var voteAverage: Float? = null,
+    @SerializedName("overview") var overview: String? = null,
+    @SerializedName("release_date") var releaseDate: String? = null
+) : RealmObject() {
+    override fun equals(other: Any?): Boolean {
+        if (other is Movie)
+            if (id == other.id)
+                return true
+        return super.equals(other)
+    }
+
+}

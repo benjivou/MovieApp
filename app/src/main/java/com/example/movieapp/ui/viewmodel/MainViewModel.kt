@@ -1,9 +1,8 @@
 package com.example.movieapp.ui.viewmodel
 
 
-import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.*
-import com.example.movieapp.App
 import com.example.movieapp.data.entities.displayabledata.EmptyMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.ErrorMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.MoviePrepared
@@ -22,11 +21,12 @@ import com.example.movieapp.data.util.Singleton.service
  */
 
 const val URL = "https://api.themoviedb.org/3/movie/"
+private const val TAG = "MainViewModel"
 
 class MainViewModel : ViewModel() {
 
 
-    private val likedList = App.database.movieDAO().getAll()
+    val likedList = Handler.getAllMovies()
 
     /**
      * Type of the list displayed
@@ -44,13 +44,13 @@ class MainViewModel : ViewModel() {
         )
         {
             when (_typeDisplay.value) {
-                TypeDisplay.LIKED -> Transformations.map(App.database.movieDAO().getAll()) {
+                TypeDisplay.LIKED -> Transformations.map(Handler.getAllMovies()) {
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
-                TypeDisplay.LIKED_POPULAR -> Transformations.map(App.database.movieDAO().getAll()) {
+                TypeDisplay.LIKED_POPULAR -> Transformations.map(Handler.getAllMovies()) {
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
-                TypeDisplay.LIKED_RATED -> Transformations.map(App.database.movieDAO().getAll()) {
+                TypeDisplay.LIKED_RATED -> Transformations.map(Handler.getAllMovies()) {
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
                 else -> internetCall()
@@ -68,6 +68,7 @@ class MainViewModel : ViewModel() {
 
             val bufM = movieList.value
             if (bufM is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
+                Log.i(TAG, "likedlist : $listMovies ")
                 _currentList.value = SuccessMoviePrepared(bufM.content.map {
                     Pair(it.first, listMovies.contains(it.first))
                 })
@@ -77,16 +78,24 @@ class MainViewModel : ViewModel() {
         _currentList.addSource(movieList) { listMoviePrepared ->
             _currentList.value =
                 if (listMoviePrepared is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
+
                     SuccessMoviePrepared(listMoviePrepared.content.map {
-                        Pair(it.first, likedList.value?.contains(it.first) ?: false)
+                        Log.i(TAG, "movie :${it.first.originalTitle} ")
+                        likedList.value!!.forEach { movie ->
+                            Log.i(
+                                TAG,
+                                "content of the list : ${movie.originalTitle}"
+                            )
+                        }
+
+                        Pair(it.first, likedList.value!!.contains(it.first))
                     })
                 } else {
+                    Log.i(TAG, "list movie is not a succesMoviePrepared: ")
                     listMoviePrepared
                 }
         }
     }
-
-
 
 
     fun getList(typeDisplay: TypeDisplay) {
@@ -110,7 +119,10 @@ class MainViewModel : ViewModel() {
 
 
     fun likeOrUnlikeMovie(movie: Movie) {
-        Handler.likeOrUnlikeMovie(movie,viewModelScope, this.likedList.value!!.contains(movie))
+        Handler.likeOrUnlikeMovie(
+            movie,
+            this.likedList.value!!.contains(movie)
+        )
     }
 
 

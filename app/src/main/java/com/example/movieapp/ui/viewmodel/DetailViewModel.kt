@@ -2,7 +2,6 @@ package com.example.movieapp.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.example.movieapp.App
 import com.example.movieapp.data.entities.displayabledata.EmptyMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.ErrorMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.MoviePrepared
@@ -11,6 +10,7 @@ import com.example.movieapp.data.entities.internet.ApiEmptyResponse
 import com.example.movieapp.data.entities.internet.ApiErrorResponse
 import com.example.movieapp.data.entities.internet.ApiSuccessResponse
 import com.example.movieapp.data.model.Movie
+import com.example.movieapp.data.util.Handler.Companion.checkIfExist
 import com.example.movieapp.data.util.Handler.Companion.likeOrUnlikeMovie
 import com.example.movieapp.data.util.Singleton.service
 
@@ -24,10 +24,12 @@ class DetailViewModel : ViewModel() {
         Transformations.switchMap(currentId) {
             it?.let { internetCall(it.toString()) }
         }
+
+
     private var isLikedMovie: LiveData<Boolean> =
         Transformations.switchMap(currentId) {
             Log.i(TAG, "getMovieAndIsLiked: $it")
-            App.database.movieDAO().isLiked(it)
+            checkIfExist(it)
         }
 
     val currentMoviePair: LiveData<MoviePrepared<Pair<Movie, Boolean>>>
@@ -74,7 +76,10 @@ class DetailViewModel : ViewModel() {
             when (it) {
                 is ApiSuccessResponse -> SuccessMoviePrepared(Pair(it.body, false))
                 is ApiEmptyResponse -> EmptyMoviePrepared<Pair<Movie, Boolean>>()
-                is ApiErrorResponse -> ErrorMoviePrepared(it.errorCode, it.errorMessage)
+                is ApiErrorResponse -> ErrorMoviePrepared<Pair<Movie, Boolean>>(
+                    it.errorCode,
+                    it.errorMessage
+                )
             }
         }
     }
@@ -82,7 +87,7 @@ class DetailViewModel : ViewModel() {
     fun likeOrUnlikeMovieExposed() {
         _currentMoviePair.value.let {
             if (it is SuccessMoviePrepared<Pair<Movie, Boolean>>)
-                likeOrUnlikeMovie(it.content.first, viewModelScope, isLikedMovie.value!!)
+                likeOrUnlikeMovie(it.content.first, isLikedMovie.value!!)
         }
     }
 

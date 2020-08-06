@@ -32,6 +32,7 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
     }
 
     override fun onCreateView(
@@ -81,6 +82,9 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
                         displayError(requireContext().getString(R.string.errorInternetVoidAnswer))
                 }
             })
+        viewModel.likedList.observe(
+            viewLifecycleOwner,
+            Observer { it.forEach {Log.i(TAG, "junk:${ it.title } ") }})
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -125,7 +129,7 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
     ) {
         Log.d(TAG, "onDetailsRequested: image is clicked")
         val action =
-            MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id)
+            MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id!!)
         view.findNavController().navigate(action)
     }
 
