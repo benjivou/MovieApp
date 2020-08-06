@@ -24,6 +24,7 @@ open class Movie(
     @SerializedName("overview") var overview: String? = null,
     @SerializedName("release_date") var releaseDate: String? = null
 ) : RealmObject() {
+
     override fun equals(other: Any?): Boolean {
         if (other is Movie)
             if (id == other.id)

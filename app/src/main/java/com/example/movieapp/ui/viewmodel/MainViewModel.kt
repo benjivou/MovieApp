@@ -3,6 +3,7 @@ package com.example.movieapp.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.example.movieapp.data.dao.MovieDAO
 import com.example.movieapp.data.entities.displayabledata.EmptyMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.ErrorMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.MoviePrepared
@@ -12,7 +13,6 @@ import com.example.movieapp.data.entities.internet.ApiErrorResponse
 import com.example.movieapp.data.entities.internet.ApiSuccessResponse
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.TypeDisplay
-import com.example.movieapp.data.util.Handler
 import com.example.movieapp.data.util.Singleton.service
 
 
@@ -25,8 +25,8 @@ private const val TAG = "MainViewModel"
 
 class MainViewModel : ViewModel() {
 
-
-    val likedList = Handler.getAllMovies()
+    private val movieDAO = MovieDAO()
+    val likedList = movieDAO.getAllMovies()
 
     /**
      * Type of the list displayed
@@ -44,13 +44,13 @@ class MainViewModel : ViewModel() {
         )
         {
             when (_typeDisplay.value) {
-                TypeDisplay.LIKED -> Transformations.map(Handler.getAllMovies()) {
+                TypeDisplay.LIKED -> Transformations.map(movieDAO.getAllMovies()) {
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
-                TypeDisplay.LIKED_POPULAR -> Transformations.map(Handler.getAllMovies()) {
+                TypeDisplay.LIKED_POPULAR -> Transformations.map(movieDAO.getAllByPopular()) {
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
-                TypeDisplay.LIKED_RATED -> Transformations.map(Handler.getAllMovies()) {
+                TypeDisplay.LIKED_RATED -> Transformations.map(movieDAO.getAllByRated()) {
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
                 else -> internetCall()
@@ -119,7 +119,7 @@ class MainViewModel : ViewModel() {
 
 
     fun likeOrUnlikeMovie(movie: Movie) {
-        Handler.likeOrUnlikeMovie(
+        movieDAO.likeOrUnlikeMovie(
             movie,
             this.likedList.value!!.contains(movie)
         )
