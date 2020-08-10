@@ -27,14 +27,11 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
 
     private lateinit var adapterList: ListAdapter
 
-
     private val viewModel: MainViewModel by viewModels()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
     }
 
     override fun onCreateView(
@@ -85,10 +82,7 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
                 }
             })
 
-
         viewModel.refresh() // correct the bug of unsubscribe
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -131,6 +125,7 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
         view: View,
         movie: Movie
     ) {
+
         Log.d(TAG, "onDetailsRequested: image is clicked")
         val action =
 

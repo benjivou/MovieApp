@@ -27,8 +27,6 @@ class DetailViewModel : ViewModel() {
             it?.let { internetCall(it.toString()) }
         }
 
-
-
     private var isLikedMovie: LiveData<Boolean> =
         Transformations.switchMap(currentId) {
             Log.i(TAG, "getMovieAndIsLiked: $it")
@@ -95,6 +93,4 @@ class DetailViewModel : ViewModel() {
 
         }
     }
-
-
 }

@@ -10,8 +10,7 @@ import com.example.movieapp.data.model.Movie
 class ListAdapter(
     private val context: Context,
     private val moviesViewHolderListener: MovieViewHolder.MoviesViewHolderListener
-) :
-    RecyclerView.Adapter<MovieViewHolder>() {
+) : RecyclerView.Adapter<MovieViewHolder>() {
 
     private var list: List<Pair<Movie, Boolean>> = listOf()
 
@@ -35,7 +34,6 @@ class ListAdapter(
     }
 
     override fun getItemCount(): Int = list.size
-
 }
 
 

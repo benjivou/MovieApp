@@ -32,6 +32,5 @@ open class Movie(
                 return true
         return super.equals(other)
     }
-
 }
 

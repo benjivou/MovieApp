@@ -1,7 +1,6 @@
 package com.example.movieapp.ui.viewmodel
 
 
-
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.movieapp.data.dao.MovieDAO
@@ -90,15 +89,14 @@ class MainViewModel : ViewModel() {
         }
     }
 
-
     fun getList(typeDisplay: TypeDisplay) {
         this._typeDisplay.value = typeDisplay
     }
 
-    fun refresh(){
+    fun refresh() {
         _currentList.removeSource(likedList)
         likedList = movieDAO.getAllMovies()
-        _currentList.addSource(likedList){ listMovies ->
+        _currentList.addSource(likedList) { listMovies ->
             Log.d(TAG, "likedlist currently modified ")
             val bufM = movieList.value
             if (bufM is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
@@ -124,7 +122,6 @@ class MainViewModel : ViewModel() {
             }
         }
 
-
     fun likeOrUnlikeMovie(movie: Movie) {
 
         movieDAO.likeOrUnlikeMovie(
@@ -133,7 +130,6 @@ class MainViewModel : ViewModel() {
         )
 
     }
-
 
     private fun convertMoviesToSuccessMoviesPrepared(movies: List<Movie>): SuccessMoviePrepared<List<Pair<Movie, Boolean>>> {
         val res = mutableListOf<Pair<Movie, Boolean>>()

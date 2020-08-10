@@ -36,6 +36,7 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val binding = DetailFragmentBinding.bind(view)
         val idMovie = args.StringAttributIdUser
 
@@ -47,6 +48,7 @@ class DetailFragment : Fragment() {
                     is SuccessMoviePrepared ->
                         moviePrepared.content.apply {
                             first.let { movie ->
+
                                 title.text = movie.title
                                 overview.text = movie.overview
                                 Picasso.get().load(PURL + movie.posterPath).into(image)
@@ -76,7 +78,6 @@ class DetailFragment : Fragment() {
                     is EmptyMoviePrepared -> title.text =
                         requireContext().getString(R.string.errorInternetVoidAnswer)
                 }
-
             }
         })
     }

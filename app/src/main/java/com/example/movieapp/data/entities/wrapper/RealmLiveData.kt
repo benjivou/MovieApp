@@ -20,5 +20,4 @@ class RealmLiveData<T : RealmModel?>(realmResults: RealmResults<T>) :
     override fun onInactive() {
         results.removeChangeListener(listener)
     }
-
 }

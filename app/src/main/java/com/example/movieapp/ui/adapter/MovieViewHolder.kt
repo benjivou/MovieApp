@@ -16,9 +16,9 @@ class MovieViewHolder(
     itemView: View,
     private val moviesViewHolderListener: MoviesViewHolderListener
 ) : RecyclerView.ViewHolder(itemView) {
+
     private val binding = ListItemBinding.bind(itemView)
     private var movie: Movie? = null
-
 
     fun bind(pair: Pair<Movie, Boolean>) {
 
@@ -40,7 +40,6 @@ class MovieViewHolder(
             }
         }
 
-
         binding.likeBtn.setOnClickListener {
             moviesViewHolderListener?.onItemLiked(movie!!)
         }
@@ -48,7 +47,6 @@ class MovieViewHolder(
         binding.image.setOnClickListener {
             moviesViewHolderListener.onDetailsRequested(it, movie!!)
         }
-
 
         if (pair.second) {
             binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)

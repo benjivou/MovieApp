@@ -13,6 +13,7 @@ private const val TAG = "Handler"
 class MovieDAO() {
 
     private fun insertMovie(movie: Movie) {
+
         Log.d(TAG, "insertMovie: inserting movie")
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
@@ -30,6 +31,7 @@ class MovieDAO() {
     }
 
     fun likeOrUnlikeMovie(movie: Movie, boolean: Boolean) {
+
         if (boolean) {
             deleteMovie(movie)
         } else {
@@ -39,6 +41,7 @@ class MovieDAO() {
 
     fun getAllMovies(
     ): LiveData<List<Movie>> {
+
         val realm = Realm.getDefaultInstance()
         return Transformations.map(
             RealmLiveData(
@@ -74,6 +77,4 @@ class MovieDAO() {
             !it.isNullOrEmpty()
         }
     }
-
-
 }

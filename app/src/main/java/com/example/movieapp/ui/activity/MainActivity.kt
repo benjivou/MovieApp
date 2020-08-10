@@ -13,6 +13,5 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityFragmentBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
-
 }
 
