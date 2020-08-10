@@ -49,8 +49,6 @@ class MovieDAO() {
             it
         }
 
-        // Async runs the fetch off the main thread, and returns
-        // results as LiveData back on the main.
     }
 
     fun getAllByPopular(): LiveData<List<Movie>> = Transformations.map(getAllMovies()) { list ->
@@ -75,8 +73,6 @@ class MovieDAO() {
             Log.i(TAG, "checkIfExist: $it")
             !it.isNullOrEmpty()
         }
-        // Async runs the fetch off the main thread, and returns
-        // results as LiveData back on the main.
     }
 
 
