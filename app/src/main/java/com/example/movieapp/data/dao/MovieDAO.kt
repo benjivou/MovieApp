@@ -38,7 +38,7 @@ class MovieDAO() {
     }
 
     fun getAllMovies(
-    ): LiveData<List<Movie>> {// TODO is the realm instance closed at the end
+    ): LiveData<List<Movie>> {
         val realm = Realm.getDefaultInstance()
         return Transformations.map(
             RealmLiveData(
@@ -46,24 +46,24 @@ class MovieDAO() {
                     .findAllAsync()
             )
         ) {
-            it?.freeze()
+            it
         }
 
         // Async runs the fetch off the main thread, and returns
         // results as LiveData back on the main.
     }
 
-    fun getAllByPopular(): LiveData<List<Movie>> = Transformations.map(getAllMovies()) {
-        it.sortedByDescending { it.popularity }
+    fun getAllByPopular(): LiveData<List<Movie>> = Transformations.map(getAllMovies()) { list ->
+        list.sortedByDescending { it.popularity }
     }
 
-    fun getAllByRated(): LiveData<List<Movie>> = Transformations.map(getAllMovies()) {
-        it.sortedByDescending { it.voteAverage }
+    fun getAllByRated(): LiveData<List<Movie>> = Transformations.map(getAllMovies()) { list ->
+        list.sortedByDescending { it.voteAverage }
     }
 
     fun checkIfExist(
         idMovie: Int
-    ): LiveData<Boolean> { // TODO is the realm instance closed at the end
+    ): LiveData<Boolean> {
         val realm = Realm.getDefaultInstance()
         return Transformations.map(
             RealmLiveData<Movie>(

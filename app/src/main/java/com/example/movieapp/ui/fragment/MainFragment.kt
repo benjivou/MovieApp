@@ -27,7 +27,7 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
 
     private lateinit var adapterList: ListAdapter
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels() // Todo regarder cela ou remplacer par un factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,9 +82,9 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
                         displayError(requireContext().getString(R.string.errorInternetVoidAnswer))
                 }
             })
-        viewModel.likedList.observe(
-            viewLifecycleOwner,
-            Observer { it.forEach {Log.i(TAG, "junk:${ it.title } ") }})
+
+        viewModel.refresh() // correct the bug of unsubscribe
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

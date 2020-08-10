@@ -41,15 +41,13 @@ class MovieViewHolder(
             }
         }
 
-        binding.likeBtn.setOnClickListener(
-            View.OnClickListener {
-                moviesViewHolderListener?.onItemLiked(movie!!)
-            }
-        )
+        binding.likeBtn.setOnClickListener {
+            moviesViewHolderListener?.onItemLiked(movie!!)
+        }
 
-        binding.image.setOnClickListener(View.OnClickListener {
+        binding.image.setOnClickListener {
             moviesViewHolderListener.onDetailsRequested(it, movie!!)
-        })
+        }
 
         if (pair.second) {
             binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)

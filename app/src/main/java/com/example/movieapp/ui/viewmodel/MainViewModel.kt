@@ -26,7 +26,7 @@ private const val TAG = "MainViewModel"
 class MainViewModel : ViewModel() {
 
     private val movieDAO = MovieDAO()
-    val likedList = movieDAO.getAllMovies()
+    var likedList = movieDAO.getAllMovies()
 
     /**
      * Type of the list displayed
@@ -64,29 +64,14 @@ class MainViewModel : ViewModel() {
         get() = _currentList
 
     init {
-        _currentList.addSource(likedList) { listMovies ->
-
-            val bufM = movieList.value
-            if (bufM is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
-                Log.i(TAG, "likedlist : $listMovies ")
-                _currentList.value = SuccessMoviePrepared(bufM.content.map {
-                    Pair(it.first, listMovies.contains(it.first))
-                })
-            }
-        }
+        Log.d(TAG, "initialisation of your mainviewmodel: ")
 
         _currentList.addSource(movieList) { listMoviePrepared ->
+            Log.d(TAG, "movie list is changed: ")
             _currentList.value =
                 if (listMoviePrepared is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
 
                     SuccessMoviePrepared(listMoviePrepared.content.map {
-                        Log.i(TAG, "movie :${it.first.originalTitle} ")
-                        likedList.value!!.forEach { movie ->
-                            Log.i(
-                                TAG,
-                                "content of the list : ${movie.originalTitle}"
-                            )
-                        }
 
                         Pair(it.first, likedList.value!!.contains(it.first))
                     })
@@ -100,6 +85,20 @@ class MainViewModel : ViewModel() {
 
     fun getList(typeDisplay: TypeDisplay) {
         this._typeDisplay.value = typeDisplay
+    }
+
+    fun refresh(){
+        _currentList.removeSource(likedList)
+        likedList = movieDAO.getAllMovies()
+        _currentList.addSource(likedList){ listMovies ->
+            Log.d(TAG, "likedlist currently modified ")
+            val bufM = movieList.value
+            if (bufM is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
+                _currentList.value = SuccessMoviePrepared(bufM.content.map {
+                    Pair(it.first, listMovies.contains(it.first))
+                })
+            }
+        }
     }
 
     private fun internetCall(): LiveData<MoviePrepared<List<Pair<Movie, Boolean>>>> =
