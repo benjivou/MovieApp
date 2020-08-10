@@ -5,6 +5,7 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
 
+
 /**
  * Created by Benjamin Vouillon on 08,July,2020
  */
@@ -33,3 +34,4 @@ open class Movie(
     }
 
 }
+

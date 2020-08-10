@@ -27,7 +27,9 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
 
     private lateinit var adapterList: ListAdapter
 
-    private val viewModel: MainViewModel by viewModels() // Todo regarder cela ou remplacer par un factory
+
+    private val viewModel: MainViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +85,9 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
                 }
             })
 
+
         viewModel.refresh() // correct the bug of unsubscribe
+
 
     }
 
@@ -129,7 +133,9 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
     ) {
         Log.d(TAG, "onDetailsRequested: image is clicked")
         val action =
+
             MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id!!)
+
         view.findNavController().navigate(action)
     }
 

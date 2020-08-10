@@ -1,6 +1,7 @@
 package com.example.movieapp.ui.viewmodel
 
 
+
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.movieapp.data.dao.MovieDAO
@@ -13,6 +14,7 @@ import com.example.movieapp.data.entities.internet.ApiErrorResponse
 import com.example.movieapp.data.entities.internet.ApiSuccessResponse
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.TypeDisplay
+
 import com.example.movieapp.data.util.Singleton.service
 
 
@@ -21,12 +23,14 @@ import com.example.movieapp.data.util.Singleton.service
  */
 
 const val URL = "https://api.themoviedb.org/3/movie/"
+
 private const val TAG = "MainViewModel"
 
 class MainViewModel : ViewModel() {
 
     private val movieDAO = MovieDAO()
     var likedList = movieDAO.getAllMovies()
+
 
     /**
      * Type of the list displayed
@@ -44,6 +48,7 @@ class MainViewModel : ViewModel() {
         )
         {
             when (_typeDisplay.value) {
+
                 TypeDisplay.LIKED -> Transformations.map(movieDAO.getAllMovies()) {
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
@@ -51,6 +56,7 @@ class MainViewModel : ViewModel() {
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
                 TypeDisplay.LIKED_RATED -> Transformations.map(movieDAO.getAllByRated()) {
+
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
                 else -> internetCall()
@@ -64,6 +70,7 @@ class MainViewModel : ViewModel() {
         get() = _currentList
 
     init {
+
         Log.d(TAG, "initialisation of your mainviewmodel: ")
 
         _currentList.addSource(movieList) { listMoviePrepared ->
@@ -77,6 +84,7 @@ class MainViewModel : ViewModel() {
                     })
                 } else {
                     Log.i(TAG, "list movie is not a succesMoviePrepared: ")
+
                     listMoviePrepared
                 }
         }
@@ -118,10 +126,12 @@ class MainViewModel : ViewModel() {
 
 
     fun likeOrUnlikeMovie(movie: Movie) {
+
         movieDAO.likeOrUnlikeMovie(
             movie,
             this.likedList.value!!.contains(movie)
         )
+
     }
 
 

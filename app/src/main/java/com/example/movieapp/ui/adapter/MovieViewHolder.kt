@@ -11,7 +11,6 @@ import com.squareup.picasso.Picasso
  * Created by Benjamin Vouillon on 15,July,2020
  */
 const val PURL = "https://image.tmdb.org/t/p/w185"
-private val TAG = "MovieViewHolder"
 
 class MovieViewHolder(
     itemView: View,
@@ -41,6 +40,7 @@ class MovieViewHolder(
             }
         }
 
+
         binding.likeBtn.setOnClickListener {
             moviesViewHolderListener?.onItemLiked(movie!!)
         }
@@ -48,6 +48,7 @@ class MovieViewHolder(
         binding.image.setOnClickListener {
             moviesViewHolderListener.onDetailsRequested(it, movie!!)
         }
+
 
         if (pair.second) {
             binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)

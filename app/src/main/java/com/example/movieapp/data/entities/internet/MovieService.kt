@@ -1,9 +1,11 @@
 package com.example.movieapp.data.entities.internet
 
 import androidx.lifecycle.MutableLiveData
+
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.ResultPage
 import com.example.movieapp.data.untracked.KEY_PRIVATE
+
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

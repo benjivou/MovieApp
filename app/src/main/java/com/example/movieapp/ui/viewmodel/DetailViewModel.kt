@@ -3,6 +3,7 @@ package com.example.movieapp.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.movieapp.data.dao.MovieDAO
+
 import com.example.movieapp.data.entities.displayabledata.EmptyMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.ErrorMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.MoviePrepared
@@ -16,13 +17,16 @@ import com.example.movieapp.data.util.Singleton.service
 private const val TAG = "DetailViewModel"
 
 class DetailViewModel : ViewModel() {
+
     private val movieDAO = MovieDAO()
+
     private var currentId: MutableLiveData<Int> = MutableLiveData()
     private var _currentMoviePair = MediatorLiveData<MoviePrepared<Pair<Movie, Boolean>>>()
     private var movieCurrent: LiveData<MoviePrepared<Pair<Movie, Boolean>>> =
         Transformations.switchMap(currentId) {
             it?.let { internetCall(it.toString()) }
         }
+
 
 
     private var isLikedMovie: LiveData<Boolean> =
@@ -79,6 +83,7 @@ class DetailViewModel : ViewModel() {
                     it.errorCode,
                     it.errorMessage
                 )
+
             }
         }
     }
@@ -87,6 +92,7 @@ class DetailViewModel : ViewModel() {
         _currentMoviePair.value.let {
             if (it is SuccessMoviePrepared<Pair<Movie, Boolean>>)
                 movieDAO.likeOrUnlikeMovie(it.content.first, isLikedMovie.value!!)
+
         }
     }
 
