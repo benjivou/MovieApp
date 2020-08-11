@@ -5,7 +5,6 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
 
-
 /**
  * Created by Benjamin Vouillon on 08,July,2020
  */
@@ -27,9 +26,8 @@ open class Movie(
 ) : RealmObject() {
 
     override fun equals(other: Any?): Boolean {
-        if (other is Movie)
-            if (id == other.id)
-                return true
+        if (other is Movie && id == other.id)
+            return true
         return super.equals(other)
     }
 }

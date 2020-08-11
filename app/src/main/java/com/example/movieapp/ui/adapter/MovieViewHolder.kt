@@ -18,7 +18,7 @@ class MovieViewHolder(
 ) : RecyclerView.ViewHolder(itemView) {
 
     private val binding = ListItemBinding.bind(itemView)
-    private var movie: Movie? = null
+    private lateinit var movie: Movie
 
     fun bind(pair: Pair<Movie, Boolean>) {
 
@@ -27,25 +27,25 @@ class MovieViewHolder(
         binding.apply {
             itemView.resources.apply {
 
-                listTitle.text = movie!!.title
+                listTitle.text = movie.title
 
                 listPopularity.text =
-                    getString(R.string.itemPopularity, movie!!.popularity.toString())
+                    getString(R.string.itemPopularity, movie.popularity.toString())
 
                 listRate.text =
-                    getString(R.string.itemRate, movie!!.voteAverage.toString())
+                    getString(R.string.itemRate, movie.voteAverage.toString())
 
-                Picasso.get().load(PURL + movie!!.posterPath)
+                Picasso.get().load(PURL + movie.posterPath)
                     .into(image)
             }
         }
 
         binding.likeBtn.setOnClickListener {
-            moviesViewHolderListener?.onItemLiked(movie!!)
+            moviesViewHolderListener.onItemLiked(movie)
         }
 
         binding.image.setOnClickListener {
-            moviesViewHolderListener.onDetailsRequested(it, movie!!)
+            moviesViewHolderListener.onDetailsRequested(it, movie)
         }
 
         if (pair.second) {
