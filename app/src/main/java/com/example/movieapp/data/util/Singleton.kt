@@ -14,5 +14,4 @@ object Singleton{
         .addCallAdapterFactory(LiveDataCallAdapterFactory())
         .build()
         .create(MoviesService::class.java)
-
 }

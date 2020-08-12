@@ -1,12 +1,10 @@
 package com.example.movieapp.ui.fragment
-
-
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.movieapp.R
@@ -20,55 +18,44 @@ import com.example.movieapp.ui.adapter.ListAdapter
 import com.example.movieapp.ui.adapter.MovieViewHolder
 import com.example.movieapp.ui.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.fragment_main.*
-
 private const val TAG = "MainFragment"
-
 class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
-
     private lateinit var adapterList: ListAdapter
-
-    private val viewModel: MainViewModel by viewModels()
-
+    private var viewModel: MainViewModel? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? =
         FragmentMainBinding.inflate(inflater, container, false).root
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         adapterList = ListAdapter(
             requireContext(),
             this
         )
         // setup the RecyclerView
         listRecyclerView.apply {
-
             layoutManager = GridLayoutManager(activity, resources.getInteger(R.integer.numberspan))
             // init the adapter to the good value
             adapter = adapterList
         }
-
-        viewModel
+        viewModel!!
             .currentList
             .observe(viewLifecycleOwner, Observer { movies ->
                 when (movies) {
-
                     is SuccessMoviePrepared<List<Pair<Movie, Boolean>>> -> {
-                        titleList.text = converteTypeDisplayToTitle(viewModel.currentTypeDisplay)
+                        titleList.text = converteTypeDisplayToTitle(viewModel!!.currentTypeDisplay)
                         adapterList.changeData(movies.content)
                         errorText.visibility = View.GONE
                         titleList.visibility = View.VISIBLE
                         listRecyclerView.visibility = View.VISIBLE
                     }
-
                     is ErrorMoviePrepared<List<Pair<Movie, Boolean>>> ->
                         displayError(
                             requireContext().getString(
@@ -76,25 +63,21 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
                                 movies.errorCode, movies.errorMessage
                             )
                         )
-
                     is EmptyMoviePrepared<List<Pair<Movie, Boolean>>> ->
                         displayError(requireContext().getString(R.string.errorInternetVoidAnswer))
                 }
             })
+        viewModel!!.refresh() // correct the bug of unsubscribe
     }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.list_action_bar, menu)
     }
-
     /**
      * the idea is to the current list display and get the new list
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         // ignore likes
         if (item.itemId == R.id.displayMoviesLiked) return true
-
         // change the list in the modelView
         loadPage(
             when (item.itemId) {
@@ -107,35 +90,30 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
         )
         return true
     }
-
     private fun loadPage(typeDisplay: TypeDisplay) {
-        viewModel.getList(
+        viewModel!!.getList(
             typeDisplay
         )
         titleList.text = converteTypeDisplayToTitle(typeDisplay)
     }
-
     override fun onItemLiked(movie: Movie) {
-        viewModel.likeOrUnlikeMovie(movie)
+        viewModel!!.likeOrUnlikeMovie(movie)
     }
-
     override fun onDetailsRequested(
         view: View,
         movie: Movie
     ) {
         Log.d(TAG, "onDetailsRequested: image is clicked")
         val action =
-            MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id)
+            MainFragmentDirections.actionMainFragmentToDetailFragment(movie.id!!)
         view.findNavController().navigate(action)
     }
-
     private fun displayError(message: String) {
         errorText.text = message
         errorText.visibility = View.VISIBLE
         titleList.visibility = View.INVISIBLE
         listRecyclerView.visibility = View.INVISIBLE
     }
-
     private fun converteTypeDisplayToTitle(typeDisplay: TypeDisplay): String {
         return getString(
             when (typeDisplay) {
@@ -148,4 +126,3 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
         )
     }
 }
-

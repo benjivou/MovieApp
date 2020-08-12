@@ -1,9 +1,9 @@
 package com.example.movieapp.ui.viewmodel
 
 
-import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.*
-import com.example.movieapp.App
+import com.example.movieapp.data.dao.MovieDAO
 import com.example.movieapp.data.entities.displayabledata.EmptyMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.ErrorMoviePrepared
 import com.example.movieapp.data.entities.displayabledata.MoviePrepared
@@ -13,7 +13,7 @@ import com.example.movieapp.data.entities.internet.ApiErrorResponse
 import com.example.movieapp.data.entities.internet.ApiSuccessResponse
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.TypeDisplay
-import com.example.movieapp.data.util.Handler
+
 import com.example.movieapp.data.util.Singleton.service
 
 
@@ -23,10 +23,13 @@ import com.example.movieapp.data.util.Singleton.service
 
 const val URL = "https://api.themoviedb.org/3/movie/"
 
+private const val TAG = "MainViewModel"
+
 class MainViewModel : ViewModel() {
 
+    private val movieDAO = MovieDAO()
+    var likedList = movieDAO.getAllMovies()
 
-    private val likedList = App.database.movieDAO().getAll()
 
     /**
      * Type of the list displayed
@@ -44,13 +47,15 @@ class MainViewModel : ViewModel() {
         )
         {
             when (_typeDisplay.value) {
-                TypeDisplay.LIKED -> Transformations.map(App.database.movieDAO().getAll()) {
+
+                TypeDisplay.LIKED -> Transformations.map(movieDAO.getAllMovies()) {
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
-                TypeDisplay.LIKED_POPULAR -> Transformations.map(App.database.movieDAO().getAll()) {
+                TypeDisplay.LIKED_POPULAR -> Transformations.map(movieDAO.getAllByPopular()) {
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
-                TypeDisplay.LIKED_RATED -> Transformations.map(App.database.movieDAO().getAll()) {
+                TypeDisplay.LIKED_RATED -> Transformations.map(movieDAO.getAllByRated()) {
+
                     convertMoviesToSuccessMoviesPrepared(it)
                 }
                 else -> internetCall()
@@ -61,11 +66,15 @@ class MainViewModel : ViewModel() {
     private var _currentList =
         MediatorLiveData<MoviePrepared<List<Pair<Movie, Boolean>>>>()
     val currentList: LiveData<MoviePrepared<List<Pair<Movie, Boolean>>>>
-        get() = _currentList
+        get() {
+            init()
+            return _currentList
+        }
 
-    init {
+    private fun init() {
+        _currentList.removeSource(likedList)
+        _currentList.removeSource(movieList)
         _currentList.addSource(likedList) { listMovies ->
-
             val bufM = movieList.value
             if (bufM is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
                 _currentList.value = SuccessMoviePrepared(bufM.content.map {
@@ -73,24 +82,37 @@ class MainViewModel : ViewModel() {
                 })
             }
         }
-
+        Log.d(TAG, "initialisation of your mainviewmodel: ")
         _currentList.addSource(movieList) { listMoviePrepared ->
+            Log.d(TAG, "movie list is changed: ")
             _currentList.value =
                 if (listMoviePrepared is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
                     SuccessMoviePrepared(listMoviePrepared.content.map {
-                        Pair(it.first, likedList.value?.contains(it.first) ?: false)
+                        Pair(it.first, likedList.value?.contains(it.first)?: false)
                     })
                 } else {
+                    Log.i(TAG, "list movie is not a succesMoviePrepared: ")
                     listMoviePrepared
                 }
         }
     }
 
-
-
-
     fun getList(typeDisplay: TypeDisplay) {
         this._typeDisplay.value = typeDisplay
+    }
+
+    fun refresh() {
+        _currentList.removeSource(likedList)
+        likedList = movieDAO.getAllMovies()
+        _currentList.addSource(likedList) { listMovies ->
+            Log.d(TAG, "likedlist currently modified ")
+            val bufM = movieList.value
+            if (bufM is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
+                _currentList.value = SuccessMoviePrepared(bufM.content.map {
+                    Pair(it.first, listMovies.contains(it.first))
+                })
+            }
+        }
     }
 
     private fun internetCall(): LiveData<MoviePrepared<List<Pair<Movie, Boolean>>>> =
@@ -108,11 +130,14 @@ class MainViewModel : ViewModel() {
             }
         }
 
-
     fun likeOrUnlikeMovie(movie: Movie) {
-        Handler.likeOrUnlikeMovie(movie,viewModelScope, this.likedList.value!!.contains(movie))
-    }
 
+        movieDAO.likeOrUnlikeMovie(
+            movie,
+            this.likedList.value!!.contains(movie)
+        )
+
+    }
 
     private fun convertMoviesToSuccessMoviesPrepared(movies: List<Movie>): SuccessMoviePrepared<List<Pair<Movie, Boolean>>> {
         val res = mutableListOf<Pair<Movie, Boolean>>()

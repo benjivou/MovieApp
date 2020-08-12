@@ -11,15 +11,14 @@ import com.squareup.picasso.Picasso
  * Created by Benjamin Vouillon on 15,July,2020
  */
 const val PURL = "https://image.tmdb.org/t/p/w185"
-private val TAG = "MovieViewHolder"
 
 class MovieViewHolder(
     itemView: View,
     private val moviesViewHolderListener: MoviesViewHolderListener
 ) : RecyclerView.ViewHolder(itemView) {
-    private val binding = ListItemBinding.bind(itemView)
-    private var movie: Movie? = null
 
+    private val binding = ListItemBinding.bind(itemView)
+    private lateinit var movie: Movie
 
     fun bind(pair: Pair<Movie, Boolean>) {
 
@@ -28,28 +27,26 @@ class MovieViewHolder(
         binding.apply {
             itemView.resources.apply {
 
-                listTitle.text = movie!!.title
+                listTitle.text = movie.title
 
                 listPopularity.text =
-                    getString(R.string.itemPopularity, movie!!.popularity.toString())
+                    getString(R.string.itemPopularity, movie.popularity.toString())
 
                 listRate.text =
-                    getString(R.string.itemRate, movie!!.voteAverage.toString())
+                    getString(R.string.itemRate, movie.voteAverage.toString())
 
-                Picasso.get().load(PURL + movie!!.posterPath)
+                Picasso.get().load(PURL + movie.posterPath)
                     .into(image)
             }
         }
 
-        binding.likeBtn.setOnClickListener(
-            View.OnClickListener {
-                moviesViewHolderListener?.onItemLiked(movie!!)
-            }
-        )
+        binding.likeBtn.setOnClickListener {
+            moviesViewHolderListener.onItemLiked(movie)
+        }
 
-        binding.image.setOnClickListener(View.OnClickListener {
-            moviesViewHolderListener.onDetailsRequested(it, movie!!)
-        })
+        binding.image.setOnClickListener {
+            moviesViewHolderListener.onDetailsRequested(it, movie)
+        }
 
         if (pair.second) {
             binding.likeBtn.setImageResource(R.drawable.ic_favorite_black_18dp)
