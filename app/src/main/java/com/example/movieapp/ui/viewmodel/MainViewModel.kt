@@ -66,24 +66,32 @@ class MainViewModel : ViewModel() {
     private var _currentList =
         MediatorLiveData<MoviePrepared<List<Pair<Movie, Boolean>>>>()
     val currentList: LiveData<MoviePrepared<List<Pair<Movie, Boolean>>>>
-        get() = _currentList
+        get() {
+            init()
+            return _currentList
+        }
 
-    init {
-
+    private fun init() {
+        _currentList.removeSource(likedList)
+        _currentList.removeSource(movieList)
+        _currentList.addSource(likedList) { listMovies ->
+            val bufM = movieList.value
+            if (bufM is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
+                _currentList.value = SuccessMoviePrepared(bufM.content.map {
+                    Pair(it.first, listMovies.contains(it.first))
+                })
+            }
+        }
         Log.d(TAG, "initialisation of your mainviewmodel: ")
-
         _currentList.addSource(movieList) { listMoviePrepared ->
             Log.d(TAG, "movie list is changed: ")
             _currentList.value =
                 if (listMoviePrepared is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
-
                     SuccessMoviePrepared(listMoviePrepared.content.map {
-
-                        Pair(it.first, likedList.value!!.contains(it.first))
+                        Pair(it.first, likedList.value?.contains(it.first)?: false)
                     })
                 } else {
                     Log.i(TAG, "list movie is not a succesMoviePrepared: ")
-
                     listMoviePrepared
                 }
         }

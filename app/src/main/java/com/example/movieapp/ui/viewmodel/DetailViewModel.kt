@@ -34,10 +34,13 @@ class DetailViewModel : ViewModel() {
         }
 
     val currentMoviePair: LiveData<MoviePrepared<Pair<Movie, Boolean>>>
-        get() = _currentMoviePair
+        get()  {
+            init()
+            return _currentMoviePair
+        }
 
 
-    init {
+    private fun init() {
 
         _currentMoviePair.addSource(movieCurrent) { moviePrepared ->
             Log.d(TAG, "movieCurrent Modify ")
