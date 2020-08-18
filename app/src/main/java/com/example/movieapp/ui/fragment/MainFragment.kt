@@ -67,7 +67,7 @@ class MainFragment : Fragment(), MovieViewHolder.MoviesViewHolderListener {
                         displayError(requireContext().getString(R.string.errorInternetVoidAnswer))
                 }
             })
-        viewModel!!.refresh() // correct the bug of unsubscribe
+
     }
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.list_action_bar, menu)

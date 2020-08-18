@@ -24,4 +24,7 @@
     <string name="likedListTitle">Unordered list of your favorite movies</string>
     <string name="likedRatedListTitle">Your favorite movies ordered by rated</string>
     <string name="likedPopularListTitle">Your favorite movies ordered by popularity</string>
+
+    <string name="permDescription">Something to describe the goal of this permission</string>
+    <string name="label">Whatever</string>
 </resources>
