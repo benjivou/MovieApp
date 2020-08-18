@@ -3,7 +3,7 @@
     package="com.example.movieapp">
 
     <permission
-        android:name="com.example.movieapp.permission.ACCES_DATABASE"
+        android:name="@string/permisionName"
         android:description="@string/permDescription"
         android:label="@string/label"
         android:protectionLevel="signature" />

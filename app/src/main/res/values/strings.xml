@@ -27,4 +27,5 @@
 
     <string name="permDescription">Something to describe the goal of this permission</string>
     <string name="label">Whatever</string>
+    <string name="permisionName">com.example.movieapp.permission.ACCES_DATABASE</string>
 </resources>
