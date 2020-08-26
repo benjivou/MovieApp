@@ -2,4 +2,6 @@
 <resources>
     <integer name="numberspan">1</integer>
     <string name="attributIdUser">idUser</string>
+
+    <integer name="sdk_version">1</integer>
 </resources>

@@ -2,9 +2,11 @@ package com.example.movieapp
 
 import android.app.Application
 import android.content.Context
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
+import com.example.movieapp.provider.resolver.ResolverHandler
 import io.realm.Realm
 
 
@@ -15,24 +17,17 @@ private const val TAG = "App"
 
 class App : Application() {
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
         Realm.init(this)
-
-        val p = getPackageManager();
-        val packagesWithTheSamePermission = mutableListOf<PackageInfo>()
-        p.getInstalledPackages(PackageManager.GET_PERMISSIONS).map { packageInfo ->
-            packageInfo.permissions?.map { it ->
-                if (it.name == "com.example.movieapp.permission.ACCES_DATABASE")
-                    packagesWithTheSamePermission.add(packageInfo)
-            }
-        }
 
         getAllAppLetBuildApp(this).map {
             Log.d(
                 TAG,
                 "app with your permissions : ${it.packageName}"
             )
+
         }
 
     }

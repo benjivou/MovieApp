@@ -1,7 +1,10 @@
 package com.example.movieapp.ui.viewmodel
 
 
+import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.example.movieapp.data.dao.MovieDAO
 import com.example.movieapp.data.entities.displayabledata.EmptyMoviePrepared
@@ -13,8 +16,9 @@ import com.example.movieapp.data.entities.internet.ApiErrorResponse
 import com.example.movieapp.data.entities.internet.ApiSuccessResponse
 import com.example.movieapp.data.model.Movie
 import com.example.movieapp.data.model.TypeDisplay
-
 import com.example.movieapp.data.util.Singleton.service
+import com.example.movieapp.provider.data.Commande
+import com.example.movieapp.provider.resolver.ResolverHandler
 
 
 /**
@@ -25,10 +29,12 @@ const val URL = "https://api.themoviedb.org/3/movie/"
 
 private const val TAG = "MainViewModel"
 
-class MainViewModel : ViewModel() {
+class MainViewModel() : ViewModel() {
 
     private val movieDAO = MovieDAO()
-    var likedList = movieDAO.getAllMovies()
+
+
+    var likedList: Commande<List<Movie>>? = null
 
 
     /**
@@ -72,10 +78,11 @@ class MainViewModel : ViewModel() {
         }
 
     private fun init() {
-        _currentList.removeSource(likedList)
+
+        _currentList.removeSource(likedList!!)
         _currentList.removeSource(movieList)
 
-        _currentList.addSource(likedList) { listMovies ->
+        _currentList.addSource(likedList!!) { listMovies ->
             val bufM = movieList.value
             if (bufM is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
                 _currentList.value = SuccessMoviePrepared(bufM.content.map {
@@ -91,8 +98,7 @@ class MainViewModel : ViewModel() {
                 if (listMoviePrepared is SuccessMoviePrepared<List<Pair<Movie, Boolean>>>) {
 
                     SuccessMoviePrepared(listMoviePrepared.content.map {
-
-                        Pair(it.first, likedList.value?.contains(it.first)?: false)
+                        Pair(it.first, likedList?.value?.contains(it.first) ?: false)
                     })
                 } else {
                     Log.i(TAG, "list movie is not a succesMoviePrepared: ")
@@ -101,10 +107,17 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun initContext(context: Context) {
+        likedList ?: run {
+            likedList =
+                Commande { ResolverHandler.recupAllMovieLiked(context.packageName, context) }
+        }
+    }
+
     fun getList(typeDisplay: TypeDisplay) {
         this._typeDisplay.value = typeDisplay
     }
-
 
 
     private fun internetCall(): LiveData<MoviePrepared<List<Pair<Movie, Boolean>>>> =
@@ -126,7 +139,7 @@ class MainViewModel : ViewModel() {
 
         movieDAO.likeOrUnlikeMovie(
             movie,
-            this.likedList.value!!.contains(movie)
+            this.likedList?.value!!.contains(movie)
         )
 
     }
