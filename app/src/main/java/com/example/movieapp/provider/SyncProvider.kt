@@ -2,11 +2,9 @@ package com.example.movieapp.provider
 
 import android.content.ContentProvider
 import android.content.ContentValues
-import android.content.UriMatcher
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
-import android.provider.ContactsContract.Directory.PACKAGE_NAME
 import android.util.Log
 import com.example.movieapp.provider.config.APP_PRIORITY
 import com.example.movieapp.provider.config.SDK_VERSION
@@ -28,16 +26,16 @@ class ExampleProvider : ContentProvider() {
         p2: String?,
         p3: Array<out String>?,
         p4: String?
-        ): Cursor? {
-            Log.i(TAG, "query: ${p0.path}")
-            return when (p0.path) {
-                "/init" -> onInit()
-                else -> null
-            }
+    ): Cursor? {
+        Log.i(TAG, "query: ${p0.path}")
+        return when (p0.path) {
+            "/init" -> onInit()
+            else -> null
         }
+    }
 
-        override fun onCreate(): Boolean {
-            return true
+    override fun onCreate(): Boolean {
+        return true
     }
 
     override fun update(p0: Uri, p1: ContentValues?, p2: String?, p3: Array<out String>?): Int {

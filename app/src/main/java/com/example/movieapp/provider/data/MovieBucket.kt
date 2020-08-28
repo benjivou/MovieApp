@@ -45,23 +45,6 @@ data class MovieBucket(
         releaseDate = movie.releaseDate
     }
 
-    fun convertToMovie(): Movie {
-        return Movie(
-            id = id,
-            popularity = popularity,
-            votePount = votePount,
-            video = video,
-            posterPath = posterPath,
-            adult = adult,
-            backdropPath = backdropPath,
-            originalLanguage = originalLanguage,
-            originalTitle = originalTitle,
-            title = title,
-            voteAverage = voteAverage,
-            overview = overview,
-            releaseDate = releaseDate
-        )
-    }
 
 }
 
